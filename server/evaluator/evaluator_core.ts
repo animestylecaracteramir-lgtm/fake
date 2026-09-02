@@ -55,9 +55,19 @@ export class EvaluatorCore {
 
     // 3. Behavioral Check (against expected output if provided)
     if (expectedOutput !== undefined) {
-      const match = JSON.stringify(result.data) === JSON.stringify(expectedOutput) ||
+      let match = JSON.stringify(result.data) === JSON.stringify(expectedOutput) ||
         (typeof expectedOutput === 'number' && Number(result.data) === expectedOutput) ||
         (typeof expectedOutput === 'string' && String(result.data).includes(expectedOutput));
+
+      if (!match && result.data && typeof result.data === 'object') {
+        if (result.data.result !== undefined) {
+          match = result.data.result === expectedOutput || JSON.stringify(result.data.result) === JSON.stringify(expectedOutput);
+        } else if (result.data.output !== undefined) {
+          match = result.data.output === expectedOutput || JSON.stringify(result.data.output) === JSON.stringify(expectedOutput);
+        } else if (result.data.value !== undefined) {
+          match = result.data.value === expectedOutput || JSON.stringify(result.data.value) === JSON.stringify(expectedOutput);
+        }
+      }
 
       checks.push({
         name: 'Deterministic Behavioral Assertion',

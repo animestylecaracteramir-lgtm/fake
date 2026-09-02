@@ -18,6 +18,14 @@ import { ToolSandbox, defaultToolSandbox } from './sandbox';
 import { ToolBuilder, defaultToolBuilder } from './builder';
 import { EvaluatorCore, defaultEvaluator } from '../evaluator/evaluator_core';
 import { KnowledgeStore, defaultKnowledgeStore } from '../memory/knowledge_store';
+import {
+  validateToolArguments,
+  computeArgumentFingerprint,
+  canonicalizeArguments,
+  buildArgumentRepairInstruction,
+  ArgumentInvocationTracker,
+  ArgumentValidationResult,
+} from './argument_repair';
 
 export class ToolRegistry {
   private tools: Map<string, ToolMetadata> = new Map();
@@ -27,6 +35,7 @@ export class ToolRegistry {
   private builder: ToolBuilder;
   private evaluator: EvaluatorCore;
   private memory: KnowledgeStore;
+  private invocationTracker: ArgumentInvocationTracker = new ArgumentInvocationTracker(2);
 
   constructor(
     workspace?: WorkspaceManager,
@@ -115,29 +124,75 @@ export class ToolRegistry {
       };
     }
 
-    // Argument Validation
-    const validationError = this.validateArguments(tool, args);
-    if (validationError) {
-      this.recordToolExecution(tool, false, Date.now() - startTime);
+    // Canonicalize & Validate Arguments against Authoritative Tool Schema
+    const validation = validateToolArguments(tool, args, { allowUnknown: false });
+    if (!validation.valid) {
+      // Check duplicate invalid call hard guard
+      const isDuplicate = this.invocationTracker.isDuplicateInvalidCall(name, validation.fingerprint);
+      if (isDuplicate) {
+        return {
+          success: false,
+          data: null,
+          error: {
+            type: 'DUPLICATE_INVALID_TOOL_CALL',
+            message: `Identical invalid invocation for tool '${name}' was already rejected. Repair arguments before retry.`,
+            tool: name,
+            reason: 'Identical invalid invocation was already rejected',
+            required: 'repair arguments before retry',
+            missing: validation.missingFields,
+            invalid: validation.invalidFields,
+            schema: {
+              required: tool.parameters.required || [],
+              properties: tool.parameters.properties || {},
+            },
+            repairable: true,
+            fingerprint: validation.fingerprint,
+          },
+          metadata: {
+            duration_ms: Date.now() - startTime,
+            tool_name: name,
+            fingerprint: validation.fingerprint,
+          },
+        };
+      }
+
+      this.invocationTracker.recordInvalidInvocation(name, validation.fingerprint, validation.message || '');
+      // Return rich, structured error without penalizing tool strategy health
       return {
         success: false,
         data: null,
         error: {
-          type: 'INVALID_ARGUMENTS',
-          message: `Validation failed for tool '${name}': ${validationError}`,
-          details: JSON.stringify(tool.parameters),
+          type: validation.errorType || 'INVALID_ARGUMENTS',
+          message: validation.message || `Validation failed for tool '${name}'`,
+          tool: name,
+          missing: validation.missingFields,
+          invalid: validation.invalidFields,
+          schema: {
+            required: tool.parameters.required || [],
+            properties: tool.parameters.properties || {},
+          },
+          repairable: true,
+          fingerprint: validation.fingerprint,
         },
-        metadata: { duration_ms: Date.now() - startTime, tool_name: name },
+        metadata: {
+          duration_ms: Date.now() - startTime,
+          tool_name: name,
+          fingerprint: validation.fingerprint,
+        },
       };
     }
+
+    // Arguments are valid - record successful invocation to clear repair counter
+    this.invocationTracker.recordSuccessfulInvocation(name);
+    const executionArgs = validation.canonicalArgs;
 
     try {
       let result: ToolResult;
       if (this.customHandlers.has(name)) {
         const handler = this.customHandlers.get(name)!;
-        result = await handler(args);
+        result = await handler(executionArgs);
       } else {
-        result = await this.executeBuiltinTool(name, args);
+        result = await this.executeBuiltinTool(name, executionArgs);
       }
 
       const durationMs = Date.now() - startTime;
@@ -159,7 +214,7 @@ export class ToolRegistry {
         success: false,
         data: null,
         error: {
-          type: 'EXECUTION_ERROR',
+          type: 'TOOL_EXECUTION_ERROR',
           message: err.message || 'An unknown error occurred during tool execution',
           details: err.stack,
         },
@@ -241,19 +296,23 @@ export class ToolRegistry {
     return true;
   }
 
-  private validateArguments(tool: ToolMetadata, args: any): string | null {
-    if (!args || typeof args !== 'object') {
-      return 'Arguments must be an object.';
-    }
+  public validateArguments(tool: ToolMetadata, args: any): string | null {
+    const res = validateToolArguments(tool, args);
+    return res.valid ? null : res.message;
+  }
 
-    const required = tool.parameters.required || [];
-    for (const req of required) {
-      if (args[req] === undefined || args[req] === null) {
-        return `Missing required parameter: '${req}'`;
-      }
-    }
+  public validateToolArgs(toolName: string, args: any, options?: { allowUnknown?: boolean }): ArgumentValidationResult | null {
+    const tool = this.tools.get(toolName);
+    if (!tool) return null;
+    return validateToolArguments(tool, args, options);
+  }
 
-    return null;
+  public getInvocationTracker(): ArgumentInvocationTracker {
+    return this.invocationTracker;
+  }
+
+  public resetInvocationTracker(): void {
+    this.invocationTracker.reset();
   }
 
   private registerBuiltinTools(): void {
@@ -313,7 +372,7 @@ export class ToolRegistry {
     // --- PYTHON TOOLS ---
     this.registerTool({
       name: 'create_python_file',
-      description: 'Create a Python (.py) file in the workspace or specific project directory.',
+      description: 'Create a Python (.py) file in the workspace or specific project directory.\nREQUIRED:\n- filepath: relative workspace path (e.g. projects/example/main.py)\n- code: complete Python source\nExample:\n{\n  "filepath": "projects/example/main.py",\n  "code": "print(\'hello\')"\n}',
       version: '1.0.0',
       category: 'python',
       parameters: {
@@ -331,7 +390,7 @@ export class ToolRegistry {
 
     this.registerTool({
       name: 'edit_python_file',
-      description: 'Edit or rewrite a Python file in the workspace.',
+      description: 'Edit or rewrite a Python file in the workspace.\nREQUIRED:\n- filepath: relative workspace path\n- code: new updated Python source code\nExample:\n{\n  "filepath": "projects/example/main.py",\n  "code": "print(\'updated\')"\n}',
       version: '1.0.0',
       category: 'python',
       parameters: {
@@ -425,7 +484,7 @@ export class ToolRegistry {
     // --- FILE WORKSPACE TOOLS ---
     this.registerTool({
       name: 'read_file',
-      description: 'Read complete content of a file within the workspace boundaries.',
+      description: 'Read complete content of a file within the workspace boundaries.\nREQUIRED:\n- filepath: relative path in workspace (e.g. workspace/config.json)\nExample:\n{\n  "filepath": "workspace/config.json"\n}',
       version: '1.0.0',
       category: 'file',
       parameters: {
@@ -442,7 +501,7 @@ export class ToolRegistry {
 
     this.registerTool({
       name: 'write_file',
-      description: 'Write complete content to a file in the workspace.',
+      description: 'Write complete content to a file in the workspace.\nREQUIRED:\n- filepath: relative path in workspace\n- content: file content string\nExample:\n{\n  "filepath": "output.txt",\n  "content": "Hello world"\n}',
       version: '1.0.0',
       category: 'file',
       parameters: {
@@ -460,7 +519,7 @@ export class ToolRegistry {
 
     this.registerTool({
       name: 'edit_file',
-      description: 'Update the content of an existing file in the workspace.',
+      description: 'Update the content of an existing file in the workspace.\nREQUIRED:\n- filepath: relative path in workspace\n- content: new file content string\nExample:\n{\n  "filepath": "output.txt",\n  "content": "Updated content"\n}',
       version: '1.0.0',
       category: 'file',
       parameters: {
@@ -529,7 +588,7 @@ export class ToolRegistry {
           code: { type: 'string', description: 'Executable Python code implementing the tool function.' },
           dependencies: { type: 'array', items: { type: 'string' }, description: 'Required dependencies.' },
           test_args: { type: 'object', description: 'Sample argument object to test the tool upon creation.' },
-          expected_test_output: { type: 'object', description: 'Expected output from the test run.' },
+          expected_test_output: { type: 'any', description: 'Expected output from the test run (number, string, or object).' },
         },
         required: ['name', 'description', 'parameters', 'code'],
       },
@@ -1014,7 +1073,7 @@ export class ToolRegistry {
           parameters: parameters || { type: 'object', properties: {}, required: [] },
           code,
           dependencies: dependencies || [],
-          status: 'active',
+          status: 'testing',
           is_custom: true,
           created_at: new Date().toISOString(),
           last_tested: new Date().toISOString(),
@@ -1039,12 +1098,41 @@ export class ToolRegistry {
         if (test_args) {
           testResult = await this.executeTool(toolName, test_args);
           evalReport = this.evaluator.evaluateToolExecution(toolName, test_args, testResult, expected_test_output);
-          if (!evalReport.passed) {
-            newMeta.status = 'testing';
-            if (newMeta.quality) newMeta.quality.health = 'degraded';
+          
+          if (!testResult.success || (evalReport && !evalReport.passed)) {
+            newMeta.status = 'error';
+            if (newMeta.quality) {
+              newMeta.quality.health = 'failing';
+              newMeta.quality.failureCount = 1;
+              newMeta.quality.consecutiveFailures = 1;
+              newMeta.quality.successRate = 0.0;
+              newMeta.quality.evaluationScore = evalReport ? evalReport.overallScore : 0.0;
+            }
+            this.saveCustomToolToRegistry(newMeta);
+
+            return {
+              success: false,
+              data: {
+                tool_name: toolName,
+                version: nextVersion,
+                status: newMeta.status,
+                test_run: testResult,
+                evaluation: evalReport,
+              },
+              error: {
+                type: 'TOOL_TEST_FAILED',
+                message: `Tool '${toolName}' failed test execution or evaluation and was not promoted to active healthy state.`,
+                details: testResult?.error?.message || (evalReport?.passed === false ? evalReport.summary : 'Test validation failed'),
+              },
+            };
           }
         }
 
+        // Promoted to active on success
+        newMeta.status = 'active';
+        if (newMeta.quality) {
+          newMeta.quality.health = 'healthy';
+        }
         this.saveCustomToolToRegistry(newMeta);
 
         return {

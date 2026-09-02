@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "lastUpdated": "2026-09-02T17:42:22.558Z",
+  "lastUpdated": "2026-09-02T18:14:18.114Z",
   "experiences": [
     {
       "id": "exp_1788368262356_b454c7",
@@ -21,8 +21,8 @@
       ],
       "promotionLevel": "trusted",
       "confidence": 1,
-      "occurrences": 12,
-      "lastObservedAt": "2026-09-02T17:08:43.919Z",
+      "occurrences": 18,
+      "lastObservedAt": "2026-09-02T18:14:17.137Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T16:57:42.356Z",
@@ -160,7 +160,7 @@
       ],
       "conditions": {},
       "result": "success",
-      "evaluationScore": 0.95,
+      "evaluationScore": 0.954,
       "evidence": [
         "act_1788368283005_call_create_1",
         "act_1788368283443_call_exec_1",
@@ -185,12 +185,22 @@
         "act_1788368863277_call_create_1",
         "act_1788368863716_call_exec_1",
         "act_1788368924393_call_create_1",
-        "act_1788368924827_call_exec_1"
+        "act_1788368924827_call_exec_1",
+        "act_1788372165390_call_create_1",
+        "act_1788372165839_call_exec_1",
+        "act_1788372533671_reason",
+        "act_1788372533671_call_create_1",
+        "act_1788372767466_call_create_1",
+        "act_1788372767913_call_exec_1",
+        "act_1788372774283_call_create_1",
+        "act_1788372774721_call_exec_1",
+        "act_1788372857619_call_create_1",
+        "act_1788372858060_call_exec_1"
       ],
       "promotionLevel": "trusted",
       "confidence": 1,
-      "occurrences": 12,
-      "lastObservedAt": "2026-09-02T17:08:44.860Z",
+      "occurrences": 17,
+      "lastObservedAt": "2026-09-02T18:14:18.099Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T16:58:03.478Z",
@@ -1762,12 +1772,18 @@
         "act_1788368748452_call_v2ray_test_1",
         "act_1788368828312_call_v2ray_test_1",
         "act_1788368863264_call_v2ray_test_1",
-        "act_1788368924380_call_v2ray_test_1"
+        "act_1788368924380_call_v2ray_test_1",
+        "act_1788372165361_call_v2ray_test_1",
+        "act_1788372533651_call_v2ray_test_1",
+        "act_1788372638499_call_v2ray_test_1",
+        "act_1788372685659_call_v2ray_test_1",
+        "act_1788372774264_call_v2ray_test_1",
+        "act_1788372857603_call_v2ray_test_1"
       ],
-      "promotionLevel": "confirmed",
-      "confidence": 0.9999999999999999,
-      "occurrences": 4,
-      "lastObservedAt": "2026-09-02T17:08:44.383Z",
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 10,
+      "lastObservedAt": "2026-09-02T18:14:17.606Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T17:05:48.454Z",
@@ -1851,7 +1867,7 @@
         "exp_1788368828135_df0af6"
       ],
       "promotionLevel": "observed",
-      "confidence": 0.24999999999999992,
+      "confidence": 0.2,
       "occurrences": 1,
       "lastObservedAt": "2026-08-18T17:07:08.136Z",
       "provenance": {
@@ -1908,12 +1924,18 @@
       "evidence": [
         "act_1788368828317_call_val_1",
         "act_1788368863269_call_val_1",
-        "act_1788368924386_call_val_1"
+        "act_1788368924386_call_val_1",
+        "act_1788372165369_call_val_1",
+        "act_1788372533658_call_val_1",
+        "act_1788372638506_call_val_1",
+        "act_1788372685667_call_val_1",
+        "act_1788372774271_call_val_1",
+        "act_1788372857609_call_val_1"
       ],
-      "promotionLevel": "confirmed",
-      "confidence": 0.8999999999999999,
-      "occurrences": 3,
-      "lastObservedAt": "2026-09-02T17:08:44.387Z",
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 9,
+      "lastObservedAt": "2026-09-02T18:14:17.611Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T17:07:08.318Z",
@@ -1970,12 +1992,18 @@
       "evidence": [
         "act_1788368828799_tc_1",
         "act_1788368863755_tc_1",
-        "act_1788368924864_tc_1"
+        "act_1788368924864_tc_1",
+        "act_1788372165922_tc_1",
+        "act_1788372533704_tc_1",
+        "act_1788372649512_tc_1",
+        "act_1788372696641_tc_1",
+        "act_1788372774767_tc_1",
+        "act_1788372858104_tc_1"
       ],
-      "promotionLevel": "confirmed",
-      "confidence": 0.8999999999999999,
-      "occurrences": 3,
-      "lastObservedAt": "2026-09-02T17:08:44.866Z",
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 9,
+      "lastObservedAt": "2026-09-02T18:14:18.106Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T17:07:08.801Z",
@@ -2029,7 +2057,7 @@
         "exp_1788368863088_e1c7a6"
       ],
       "promotionLevel": "observed",
-      "confidence": 0.3999999999999999,
+      "confidence": 0.2,
       "occurrences": 1,
       "lastObservedAt": "2026-08-18T17:07:43.088Z",
       "provenance": {
@@ -2112,10 +2140,10 @@
       "result": "success",
       "evaluationScore": 0.96,
       "evidence": [],
-      "promotionLevel": "repeated",
-      "confidence": 0.7999999999999999,
-      "occurrences": 2,
-      "lastObservedAt": "2026-09-02T17:08:44.868Z",
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 8,
+      "lastObservedAt": "2026-09-02T18:14:18.108Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T17:07:43.758Z",
@@ -2167,7 +2195,7 @@
         "exp_1788368924209_0af11b"
       ],
       "promotionLevel": "observed",
-      "confidence": 0.5499999999999999,
+      "confidence": 0.2,
       "occurrences": 1,
       "lastObservedAt": "2026-08-18T17:08:44.211Z",
       "provenance": {
@@ -2276,6 +2304,869 @@
         "context": {}
       },
       "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: {\"agent_name\":\"Autonomous_Proxy_Config_Researcher\",\"version\":\"3.0\",\"role\":\"autonomous configuration research, tool-building, validation and evaluation agent\",\"mission\":{\"primary_goal\":\"Find or construct legitimate proxy configuration candidates from authorized/public sources, validate them rigorously, evaluate real end-to-end connectivity, and return only configurations supported by actual test evidence.\",\"success_definition\":\"A configuration is considered WORKING only when the proxy tunnel itself can successfully establish and carry real HTTPS traffic to at least one target service that is known to be filtered or otherwise inaccessible from the baseline Iranian network.\",\"important_principle\":\"Ping is not a proxy test. TCP reachability is not a proxy test. TLS success is not a proxy test. The final criterion is end-to-end application-layer connectivity through the proxy.\"},\"operating_mode\":{\"autonomous\":true,\"tool_building\":true,\"self_evaluation\":true,\"persistent_learning\":true,\"retry_failed_operations\":true,\"never_repeat_identical_failed_action\":true,\"never_invent_missing_configuration_values\":true,\"never_claim_success_without_evidence\":true},\"core_pipeline\":[\"DISCOVER\",\"SEARCH\",\"EXTRACT\",\"PARSE\",\"NORMALIZE\",\"STATIC_VALIDATE\",\"DNS_TEST\",\"NETWORK_TEST\",\"TLS_TEST\",\"PROTOCOL_TEST\",\"PROXY_TUNNEL_TEST\",\"FILTERED_SITE_TEST\",\"APPLICATION_TEST\",\"QUALITY_TEST\",\"SCORE\",\"CLASSIFY\",\"LEARN\",\"DEDUPLICATE\",\"REPORT\"],\"phase_1_discovery\":{\"instruction\":\"Search public and authorized sources for complete proxy configuration candidates.\",\"rules\":[\"Prefer recent sources.\",\"Record source URL and retrieval timestamp.\",\"Preserve the exact original configuration.\",\"Do not fabricate configuration strings.\",\"Do not modify credentials or security parameters merely to make a candidate pass validation.\",\"Deduplicate candidates before expensive testing.\"],\"supported_protocols\":[\"Shadowsocks\",\"VMess\",\"VLESS\",\"Trojan\"]},\"phase_2_parsing\":{\"instruction\":\"Parse each candidate according to the actual URI/protocol specification.\",\"rules\":[\"Decode Base64 when required.\",\"Support URL-safe Base64.\",\"Support missing Base64 padding when valid.\",\"Percent-decode URI components when required.\",\"Validate URI scheme.\",\"Validate hostname/IP.\",\"Validate port.\",\"Validate required credentials.\",\"Validate protocol-specific parameters.\",\"Reject malformed candidates.\",\"Never guess missing values.\"]},\"phase_3_normalization\":{\"normalized_schema\":{\"protocol\":null,\"server\":null,\"port\":null,\"uuid\":null,\"username\":null,\"password\":null,\"method\":null,\"security\":null,\"transport\":null,\"network\":null,\"host\":null,\"path\":null,\"sni\":null,\"alpn\":[],\"fingerprint\":null,\"public_key\":null,\"short_id\":null,\"service_name\":null,\"remarks\":null,\"source\":null,\"original_config\":null}},\"phase_4_static_validation\":{\"instruction\":\"Validate configuration correctness before connecting.\",\"checks\":[\"URI syntax\",\"required parameters\",\"protocol compatibility\",\"credential format\",\"port range\",\"hostname validity\",\"transport validity\",\"security compatibility\",\"TLS parameter consistency\"],\"failure_policy\":\"Reject candidate before network testing when mandatory static validation fails.\"},\"phase_5_dns\":{\"instruction\":\"Resolve hostnames when the configuration uses a domain.\",\"record\":[\"dns_success\",\"resolved_ips\",\"resolution_latency_ms\",\"dns_error\"],\"rules\":[\"DNS success does not imply proxy success.\",\"Do not replace the original hostname in the configuration.\",\"Do not silently change DNS behavior without recording the change.\"]},\"phase_6_network\":{\"instruction\":\"Test whether the configured endpoint is reachable.\",\"tests\":[\"TCP connection where applicable\",\"UDP reachability only when required by the transport\",\"connection timeout\",\"connection refused\",\"connection reset\",\"latency\"],\"critical_rule\":\"ICMP ping may be collected as diagnostic data but MUST NEVER be used as proof that the proxy works.\"},\"phase_7_tls\":{\"instruction\":\"Validate TLS independently when the configuration requires TLS.\",\"checks\":[\"TLS handshake\",\"SNI correctness\",\"certificate behavior\",\"TLS protocol compatibility\",\"ALPN negotiation when relevant\",\"handshake latency\"],\"rules\":[\"TLS success is not equivalent to proxy success.\",\"Do not automatically replace SNI with server IP.\",\"Record every TLS failure explicitly.\"]},\"phase_8_protocol_validation\":{\"instruction\":\"Perform protocol-aware validation using an appropriate client implementation.\",\"rules\":[\"A reachable TCP port is insufficient.\",\"A successful TLS handshake is insufficient.\",\"Use the actual configuration parameters.\",\"Attempt protocol initialization.\",\"Verify authentication or protocol negotiation when technically possible.\",\"Classify the result as success, failure or unknown.\",\"Never convert unknown into success.\"]},\"phase_9_proxy_tunnel\":{\"instruction\":\"Establish an actual outbound tunnel through the candidate configuration.\",\"required\":true,\"checks\":[\"Proxy process starts successfully\",\"Configuration is accepted by the client\",\"Local proxy listener is created\",\"Proxy tunnel establishes successfully\",\"Outbound request is routed through the tunnel\",\"Remote response is received\"],\"failure_policy\":[\"If the local client cannot start, classify as client_configuration_error.\",\"If the local listener starts but tunnel cannot be established, classify as tunnel_failed.\",\"If tunnel establishes but outbound traffic fails, classify as outbound_traffic_failed.\"]},\"phase_10_baseline_comparison\":{\"instruction\":\"Before evaluating a proxy candidate, establish a baseline from the same network environment.\",\"baseline_tests\":[\"HTTPS access to youtube.com\",\"HTTPS access to x.com\",\"DNS resolution\",\"HTTP status where applicable\",\"TLS handshake where applicable\"],\"purpose\":\"Determine whether the target is currently accessible without the proxy. This prevents falsely labeling an ordinary unrestricted connection as a successful circumvention result.\",\"rules\":[\"Baseline and proxy tests must use comparable destinations.\",\"If a target is already accessible without the proxy, mark it as a weak validation target.\",\"Use multiple targets rather than relying on a single website.\"]},\"phase_11_filtered_service_validation\":{\"instruction\":\"Test actual application-layer access to services that are filtered or otherwise inaccessible on the baseline Iranian network.\",\"priority_targets\":[{\"name\":\"YouTube\",\"domains\":[\"youtube.com\",\"www.youtube.com\"]},{\"name\":\"X\",\"domains\":[\"x.com\",\"twitter.com\"]}],\"secondary_targets\":[\"instagram.com\",\"facebook.com\",\"telegram.org\"],\"testing_strategy\":{\"step_1\":\"Perform baseline request without proxy.\",\"step_2\":\"Perform the same or equivalent request through the proxy.\",\"step_3\":\"Compare DNS, TCP, TLS, HTTP and application-level outcomes.\",\"step_4\":\"Confirm that the successful request actually traversed the proxy tunnel.\",\"step_5\":\"Record response status, redirect chain, connection time and failure reason.\"},\"success_requirement\":{\"minimum\":\"At least one filtered target must successfully load through the proxy while failing or being inaccessible in the baseline test.\",\"preferred\":\"At least two independent filtered targets must successfully load.\",\"strong_success\":\"YouTube and X both successfully complete application-layer requests through the proxy.\"}},\"phase_12_application_validation\":{\"instruction\":\"Do not stop at TCP or TLS. Confirm application-layer HTTPS functionality.\",\"checks\":[\"HTTPS connection\",\"HTTP response\",\"redirect handling\",\"response headers\",\"expected domain reached\",\"no obvious filtering/block page\",\"reasonable response latency\"],\"rules\":[\"HTTP 200 is not mandatory for every service because redirects and authentication flows are legitimate.\",\"A successful redirect to the expected service domain can count as application success.\",\"A proxy-generated error page does not count as success.\",\"A local filtering page does not count as success.\",\"A generic TCP connection without valid HTTP response does not count as success.\"]},\"phase_13_quality_test\":{\"instruction\":\"Evaluate whether a working configuration is practically usable.\",\"metrics\":[\"connection latency\",\"TLS latency\",\"tunnel establishment time\",\"HTTP response latency\",\"stability across repeated requests\",\"success rate\",\"failure rate\",\"throughput when appropriate\",\"reconnection behavior\"],\"repeat_count\":3,\"stability_rule\":\"A single successful request is weaker evidence than repeated successful requests.\"},\"phase_14_scoring\":{\"weights\":{\"syntax\":10,\"dns\":5,\"network\":10,\"tls\":10,\"protocol\":15,\"tunnel\":15,\"filtered_site_access\":25,\"stability\":10},\"score_range\":\"0-100\",\"classification\":{\"0\":\"INVALID\",\"95-100\":\"WORKING_EXCELLENT\",\"85-94\":\"WORKING\",\"70-84\":\"LIKELY_WORKING\",\"50-69\":\"PARTIALLY_VALIDATED\",\"1-49\":\"FAILED\"},\"hard_override_rules\":[{\"condition\":\"filtered_site_access == false\",\"maximum_classification\":\"PARTIALLY_VALIDATED\"},{\"condition\":\"proxy_tunnel == false\",\"maximum_classification\":\"FAILED\"},{\"condition\":\"syntax_valid == false\",\"classification\":\"INVALID\"},{\"condition\":\"only_ping_success == true\",\"classification\":\"FAILED\"},{\"condition\":\"only_tcp_success == true\",\"classification\":\"PARTIALLY_VALIDATED\"}]},\"phase_15_failure_analysis\":{\"instruction\":\"When a candidate fails, identify the most likely failure layer instead of simply marking it invalid.\",\"failure_categories\":[\"malformed_uri\",\"invalid_credentials\",\"invalid_protocol_parameters\",\"dns_failure\",\"port_closed\",\"connection_timeout\",\"connection_reset\",\"tls_failure\",\"sni_failure\",\"protocol_handshake_failure\",\"authentication_failure\",\"proxy_tunnel_failure\",\"outbound_traffic_failure\",\"filtered_site_unreachable\",\"application_layer_failure\",\"unstable_connection\",\"unknown\"]},\"phase_16_autonomous_tool_building\":{\"instruction\":\"When an unavailable capability prevents reliable validation, create or improve a local validation tool instead of pretending the test succeeded.\",\"tool_generation_rules\":[\"First determine exactly which capability is missing.\",\"Build the smallest tool required.\",\"Test the tool independently.\",\"Record tool version.\",\"Use the tool on a controlled candidate.\",\"Compare tool result against expected behavior.\",\"Only then integrate the tool into the main pipeline.\"],\"possible_tools\":[\"URI parser\",\"Base64 decoder\",\"configuration normalizer\",\"DNS tester\",\"TCP tester\",\"TLS tester\",\"protocol validator\",\"local proxy launcher\",\"HTTP/SOCKS connectivity tester\",\"filtered-site connectivity evaluator\",\"stability tester\",\"configuration deduplicator\",\"result database\"],\"safety_rule\":\"Never create a tool whose only purpose is to fabricate or fake successful test results.\"},\"phase_17_persistent_learning\":{\"instruction\":\"Store reusable knowledge from previous tests without storing sensitive credentials unnecessarily.\",\"memory_items\":[\"source reliability\",\"parser bugs\",\"protocol parsing edge cases\",\"common failure patterns\",\"transport compatibility observations\",\"test-tool failures\",\"network conditions\",\"candidate fingerprints\",\"historical success rates\"],\"rules\":[\"Do not store plaintext credentials unless explicitly required.\",\"Prefer hashes/fingerprints for deduplication.\",\"Do not treat historical success as proof of current success.\",\"Always revalidate current configurations.\",\"Learn from failed experiments.\"]},\"phase_18_autonomous_evaluation\":{\"instruction\":\"Evaluate the quality of the entire validation process, not just individual configurations.\",\"questions\":[\"Did the test actually exercise the proxy tunnel?\",\"Did the baseline test establish that the target was inaccessible without the proxy?\",\"Did the filtered-site test reach the expected service?\",\"Was the result reproducible?\",\"Could a false positive explain the result?\",\"Was the failure caused by the configuration, network conditions, or the validator itself?\",\"Should the validator tool be improved before further candidates are tested?\"],\"false_positive_checks\":[\"baseline unexpectedly accessible\",\"cached content\",\"local DNS interference\",\"redirect to unrelated domain\",\"proxy process started but traffic bypassed it\",\"HTTP success generated by local middleware\",\"test destination temporarily unavailable\",\"test tool malfunction\"]},\"phase_19_loop_prevention\":{\"critical\":true,\"instruction\":\"Prevent infinite loops, especially after success.\",\"state_machine\":[\"DISCOVER\",\"VALIDATE\",\"TEST\",\"CLASSIFY\",\"SAVE\",\"FINALIZE\"],\"terminal_states\":[\"SUCCESS\",\"NO_VALID_CONFIGURATIONS\",\"VALIDATION_LIMIT_REACHED\",\"TOOL_FAILURE\"],\"success_behavior\":{\"when\":\"A candidate reaches the configured success threshold\",\"actions\":[\"Save the successful result.\",\"Stop testing unnecessary additional mutations of the same candidate.\",\"Mark the candidate as validated.\",\"Produce the final report.\",\"Transition to terminal state SUCCESS.\"],\"forbidden\":[\"Do not restart discovery automatically.\",\"Do not repeatedly retest the same successful candidate.\",\"Do not create infinite refinement cycles.\",\"Do not keep optimizing after success unless an explicit optimization objective exists.\"]},\"retry_policy\":{\"max_attempts_per_candidate\":3,\"max_tool_rebuild_attempts\":2,\"max_total_iterations\":100,\"exponential_backoff\":true},\"deduplication_key\":[\"protocol\",\"server\",\"port\",\"credential_fingerprint\",\"transport\",\"security\",\"sni\",\"path\"]},\"phase_20_output\":{\"instruction\":\"Return a structured evidence-based report.\",\"result_schema\":{\"candidate_id\":null,\"original_config\":null,\"protocol\":null,\"server\":null,\"port\":null,\"source\":null,\"syntax_valid\":false,\"dns_status\":null,\"tcp_status\":null,\"tls_status\":null,\"protocol_status\":null,\"tunnel_status\":null,\"baseline\":{\"youtube\":null,\"x\":null},\"proxy_test\":{\"youtube\":null,\"x\":null,\"other_targets\":[]},\"stability\":{\"attempts\":0,\"successful_attempts\":0,\"success_rate\":0},\"score\":0,\"classification\":null,\"failure_reason\":null,\"evidence\":[],\"tested_at\":null}},\"final_decision_rules\":[\"WORKING means end-to-end proxy connectivity has been demonstrated.\",\"Ping success alone can never produce WORKING.\",\"TCP success alone can never produce WORKING.\",\"TLS success alone can never produce WORKING.\",\"Protocol handshake success alone can never produce WORKING.\",\"At least one real application-layer filtered-service test must pass.\",\"Prefer two independent filtered services for high confidence.\",\"Repeated success is stronger evidence than one success.\",\"Unknown results remain unknown.\",\"Never fabricate missing fields.\",\"Never alter a candidate merely to force success.\",\"Always preserve evidence for every classification.\"],\"final_agent_instruction\":\"Act as an autonomous validation and research system, not as a text generator. Search, parse, normalize, build tools when required, validate, establish baseline conditions, create a real proxy tunnel, perform application-layer tests against filtered services, measure stability, score the evidence, learn from failures, and terminate cleanly after achieving the configured success criteria. The strongest proof that a configuration works is not ping, port reachability, or TLS negotiation; it is reproducible real-world application connectivity through the proxy to a target that is inaccessible from the baseline network.\"}"
+    },
+    {
+      "id": "exp_1788372165159_84914e",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788372165159",
+      "goal": "Session_Persist_Check_1788372165159",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788372165159_84914e"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:02:45.159Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:02:45.159Z",
+        "evidenceIds": [
+          "exp_1788372165159_84914e"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788372165163_f8f024",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788372165163_o43z",
+      "taskSignature": "stale_benchmark_1788372165163_o43z_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788372165163_f8f024"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-18T18:02:45.164Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:02:45.163Z",
+        "evidenceIds": [
+          "exp_1788372165163_f8f024"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788372165163_o43z."
+    },
+    {
+      "id": "exp_1788372165169_be10a5",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788372165169_dx4l",
+      "taskSignature": "hierarchy_test_task_1788372165169_dx4l_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788372165169_be10a5"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-02T18:02:45.174Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:02:45.169Z",
+        "evidenceIds": [
+          "exp_1788372165169_be10a5"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788372165169_dx4l."
+    },
+    {
+      "id": "exp_1788372165384_e7cce3",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788372165381",
+      "goal": "Memory_Sync_Terminal_1788372165381",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788372165383_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:02:45.384Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:02:45.384Z",
+        "evidenceIds": [
+          "act_1788372165383_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788372165381"
+    },
+    {
+      "id": "exp_1788372533457_99cec3",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788372533457",
+      "goal": "Session_Persist_Check_1788372533457",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788372533457_99cec3"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:08:53.457Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:08:53.457Z",
+        "evidenceIds": [
+          "exp_1788372533457_99cec3"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788372533461_3326f7",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788372533461_60fc",
+      "taskSignature": "stale_benchmark_1788372533461_60fc_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788372533461_3326f7"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-18T18:08:53.462Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:08:53.461Z",
+        "evidenceIds": [
+          "exp_1788372533461_3326f7"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788372533461_60fc."
+    },
+    {
+      "id": "exp_1788372533468_fb9db5",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788372533468_syqx",
+      "taskSignature": "hierarchy_test_task_1788372533468_syqx_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788372533468_fb9db5"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-02T18:08:53.475Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:08:53.468Z",
+        "evidenceIds": [
+          "exp_1788372533468_fb9db5"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788372533468_syqx."
+    },
+    {
+      "id": "exp_1788372533666_d72afa",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788372533662",
+      "goal": "Memory_Sync_Terminal_1788372533662",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788372533664_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:08:53.666Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:08:53.666Z",
+        "evidenceIds": [
+          "act_1788372533664_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788372533662"
+    },
+    {
+      "id": "exp_1788372638313_de8e64",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788372638313",
+      "goal": "Session_Persist_Check_1788372638313",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788372638313_de8e64"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:10:38.313Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:10:38.313Z",
+        "evidenceIds": [
+          "exp_1788372638313_de8e64"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788372638316_cd1973",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788372638316_ymp9",
+      "taskSignature": "stale_benchmark_1788372638316_ymp9_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788372638316_cd1973"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-18T18:10:38.317Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:10:38.316Z",
+        "evidenceIds": [
+          "exp_1788372638316_cd1973"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788372638316_ymp9."
+    },
+    {
+      "id": "exp_1788372638321_efd604",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788372638321_z1ud",
+      "taskSignature": "hierarchy_test_task_1788372638321_z1ud_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788372638321_efd604"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-02T18:10:38.326Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:10:38.321Z",
+        "evidenceIds": [
+          "exp_1788372638321_efd604"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788372638321_z1ud."
+    },
+    {
+      "id": "exp_1788372638512_a57ce3",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788372638509",
+      "goal": "Memory_Sync_Terminal_1788372638509",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788372638510_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:10:38.512Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:10:38.512Z",
+        "evidenceIds": [
+          "act_1788372638510_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788372638509"
+    },
+    {
+      "id": "exp_1788372649507_8a3c7f",
+      "category": "episodic",
+      "taskType": "python_coding",
+      "taskSignature": "python_coding_create_a_python_script_to_double_numbers",
+      "goal": "Create a python script to double numbers and test it",
+      "strategy": "Pivot: Summarize completed actions, report verified results, and outline what remains missing.",
+      "toolsUsed": [
+        "create_tool",
+        "fast_doubler"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "act_1788372638517_reason",
+        "act_1788372638517_call_create_1",
+        "act_1788372638920_reason",
+        "act_1788372638921_call_exec_1",
+        "act_1788372639354_reason",
+        "act_1788372639355_call_exec_1",
+        "act_1788372639792_reason",
+        "act_1788372639793_call_exec_1",
+        "act_1788372640232_reason",
+        "act_1788372640232_call_exec_1",
+        "act_1788372640667_reason",
+        "act_1788372640667_call_exec_1",
+        "act_1788372641104_reason",
+        "act_1788372641105_call_exec_1",
+        "act_1788372641543_reason",
+        "act_1788372641543_call_exec_1",
+        "act_1788372641978_reason",
+        "act_1788372641979_call_exec_1",
+        "act_1788372642417_reason",
+        "act_1788372642417_call_exec_1",
+        "act_1788372642854_reason",
+        "act_1788372642854_call_exec_1",
+        "act_1788372643289_reason",
+        "act_1788372643289_call_exec_1",
+        "act_1788372643730_reason",
+        "act_1788372643731_call_exec_1",
+        "act_1788372644166_reason",
+        "act_1788372644166_call_exec_1",
+        "act_1788372644609_reason",
+        "act_1788372644610_call_exec_1",
+        "act_1788372645050_reason",
+        "act_1788372645050_call_exec_1",
+        "act_1788372645489_reason",
+        "act_1788372645489_call_exec_1",
+        "act_1788372645927_reason",
+        "act_1788372645927_call_exec_1",
+        "act_1788372646367_reason",
+        "act_1788372646368_call_exec_1",
+        "act_1788372646811_reason",
+        "act_1788372646812_call_exec_1",
+        "act_1788372647290_reason",
+        "act_1788372647291_call_exec_1",
+        "act_1788372647728_reason",
+        "act_1788372647728_call_exec_1",
+        "act_1788372648167_reason",
+        "act_1788372648168_call_exec_1",
+        "act_1788372648608_reason",
+        "act_1788372648608_call_exec_1",
+        "act_1788372649045_reason",
+        "act_1788372649046_call_exec_1",
+        "act_1788372685686_reason",
+        "act_1788372685686_call_create_1",
+        "act_1788372686090_reason",
+        "act_1788372686091_call_exec_1",
+        "act_1788372686528_reason",
+        "act_1788372686528_call_exec_1",
+        "act_1788372686965_reason",
+        "act_1788372686966_call_exec_1",
+        "act_1788372687402_reason",
+        "act_1788372687402_call_exec_1",
+        "act_1788372687837_reason",
+        "act_1788372687838_call_exec_1",
+        "act_1788372688273_reason",
+        "act_1788372688273_call_exec_1",
+        "act_1788372688715_reason",
+        "act_1788372688715_call_exec_1",
+        "act_1788372689151_reason",
+        "act_1788372689151_call_exec_1",
+        "act_1788372689589_reason",
+        "act_1788372689589_call_exec_1",
+        "act_1788372690023_reason",
+        "act_1788372690024_call_exec_1",
+        "act_1788372690462_reason",
+        "act_1788372690462_call_exec_1",
+        "act_1788372690898_reason",
+        "act_1788372690898_call_exec_1",
+        "act_1788372691337_reason",
+        "act_1788372691337_call_exec_1",
+        "act_1788372691773_reason",
+        "act_1788372691774_call_exec_1",
+        "act_1788372692208_reason",
+        "act_1788372692209_call_exec_1",
+        "act_1788372692652_reason",
+        "act_1788372692652_call_exec_1",
+        "act_1788372693097_reason",
+        "act_1788372693097_call_exec_1",
+        "act_1788372693536_reason",
+        "act_1788372693536_call_exec_1",
+        "act_1788372693975_reason",
+        "act_1788372693975_call_exec_1",
+        "act_1788372694415_reason",
+        "act_1788372694416_call_exec_1",
+        "act_1788372694853_reason",
+        "act_1788372694854_call_exec_1",
+        "act_1788372695297_reason",
+        "act_1788372695297_call_exec_1",
+        "act_1788372695736_reason",
+        "act_1788372695737_call_exec_1",
+        "act_1788372696191_reason",
+        "act_1788372696191_call_exec_1"
+      ],
+      "promotionLevel": "repeated",
+      "confidence": 0.7999999999999999,
+      "occurrences": 2,
+      "lastObservedAt": "2026-09-02T18:11:36.636Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:10:49.507Z",
+        "evidenceIds": [
+          "act_1788372638517_reason",
+          "act_1788372638517_call_create_1",
+          "act_1788372638920_reason",
+          "act_1788372638921_call_exec_1",
+          "act_1788372639354_reason",
+          "act_1788372639355_call_exec_1",
+          "act_1788372639792_reason",
+          "act_1788372639793_call_exec_1",
+          "act_1788372640232_reason",
+          "act_1788372640232_call_exec_1",
+          "act_1788372640667_reason",
+          "act_1788372640667_call_exec_1",
+          "act_1788372641104_reason",
+          "act_1788372641105_call_exec_1",
+          "act_1788372641543_reason",
+          "act_1788372641543_call_exec_1",
+          "act_1788372641978_reason",
+          "act_1788372641979_call_exec_1",
+          "act_1788372642417_reason",
+          "act_1788372642417_call_exec_1",
+          "act_1788372642854_reason",
+          "act_1788372642854_call_exec_1",
+          "act_1788372643289_reason",
+          "act_1788372643289_call_exec_1",
+          "act_1788372643730_reason",
+          "act_1788372643731_call_exec_1",
+          "act_1788372644166_reason",
+          "act_1788372644166_call_exec_1",
+          "act_1788372644609_reason",
+          "act_1788372644610_call_exec_1",
+          "act_1788372645050_reason",
+          "act_1788372645050_call_exec_1",
+          "act_1788372645489_reason",
+          "act_1788372645489_call_exec_1",
+          "act_1788372645927_reason",
+          "act_1788372645927_call_exec_1",
+          "act_1788372646367_reason",
+          "act_1788372646368_call_exec_1",
+          "act_1788372646811_reason",
+          "act_1788372646812_call_exec_1",
+          "act_1788372647290_reason",
+          "act_1788372647291_call_exec_1",
+          "act_1788372647728_reason",
+          "act_1788372647728_call_exec_1",
+          "act_1788372648167_reason",
+          "act_1788372648168_call_exec_1",
+          "act_1788372648608_reason",
+          "act_1788372648608_call_exec_1",
+          "act_1788372649045_reason",
+          "act_1788372649046_call_exec_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Pivot: Summarize completed actions, report verified results, and outline what remains missing.' for: Create a python script to double numbers and test it"
+    },
+    {
+      "id": "exp_1788372685473_a58bec",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788372685473",
+      "goal": "Session_Persist_Check_1788372685473",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788372685473_a58bec"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:11:25.473Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:11:25.473Z",
+        "evidenceIds": [
+          "exp_1788372685473_a58bec"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788372685477_abc986",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788372685477_a9ee",
+      "taskSignature": "stale_benchmark_1788372685477_a9ee_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788372685477_abc986"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.24999999999999992,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-18T18:11:25.478Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:11:25.477Z",
+        "evidenceIds": [
+          "exp_1788372685477_abc986"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788372685477_a9ee."
+    },
+    {
+      "id": "exp_1788372685483_1d668b",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788372685483_c1d6",
+      "taskSignature": "hierarchy_test_task_1788372685483_c1d6_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788372685483_1d668b"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-02T18:11:25.488Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:11:25.483Z",
+        "evidenceIds": [
+          "exp_1788372685483_1d668b"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788372685483_c1d6."
+    },
+    {
+      "id": "exp_1788372685682_de7470",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788372685671",
+      "goal": "Memory_Sync_Terminal_1788372685671",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788372685680_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:11:25.682Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:11:25.682Z",
+        "evidenceIds": [
+          "act_1788372685680_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788372685671"
+    },
+    {
+      "id": "exp_1788372774080_bc8ad9",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788372774080",
+      "goal": "Session_Persist_Check_1788372774080",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788372774080_bc8ad9"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:12:54.080Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:12:54.080Z",
+        "evidenceIds": [
+          "exp_1788372774080_bc8ad9"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788372774084_ccdf68",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788372774084_u7br",
+      "taskSignature": "stale_benchmark_1788372774084_u7br_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788372774084_ccdf68"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.3999999999999999,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-18T18:12:54.086Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:12:54.084Z",
+        "evidenceIds": [
+          "exp_1788372774084_ccdf68"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788372774084_u7br."
+    },
+    {
+      "id": "exp_1788372774090_b7a3d2",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788372774090_druw",
+      "taskSignature": "hierarchy_test_task_1788372774090_druw_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788372774090_b7a3d2"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-02T18:12:54.096Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:12:54.090Z",
+        "evidenceIds": [
+          "exp_1788372774090_b7a3d2"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788372774090_druw."
+    },
+    {
+      "id": "exp_1788372774278_327837",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788372774274",
+      "goal": "Memory_Sync_Terminal_1788372774274",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788372774276_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:12:54.278Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:12:54.278Z",
+        "evidenceIds": [
+          "act_1788372774276_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788372774274"
+    },
+    {
+      "id": "exp_1788372857419_098edf",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788372857419",
+      "goal": "Session_Persist_Check_1788372857419",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788372857419_098edf"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:14:17.419Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:14:17.419Z",
+        "evidenceIds": [
+          "exp_1788372857419_098edf"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788372857423_0a536c",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788372857423_nw6f",
+      "taskSignature": "stale_benchmark_1788372857423_nw6f_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788372857423_0a536c"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.5499999999999999,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-18T18:14:17.424Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:14:17.423Z",
+        "evidenceIds": [
+          "exp_1788372857423_0a536c"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788372857423_nw6f."
+    },
+    {
+      "id": "exp_1788372857428_658af3",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788372857428_m2ky",
+      "taskSignature": "hierarchy_test_task_1788372857428_m2ky_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788372857428_658af3"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-02T18:14:17.433Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:14:17.428Z",
+        "evidenceIds": [
+          "exp_1788372857428_658af3"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788372857428_m2ky."
+    },
+    {
+      "id": "exp_1788372857615_08d766",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788372857612",
+      "goal": "Memory_Sync_Terminal_1788372857612",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788372857614_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-02T18:14:17.615Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-02T18:14:17.615Z",
+        "evidenceIds": [
+          "act_1788372857614_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788372857612"
     }
   ],
   "negativeKnowledge": [
@@ -2288,10 +3179,10 @@
       "failureType": "SCRAPING_DEFECT",
       "reason": "Raw web scraping yielded malformed JSON syntax in Iranian network environment.",
       "suggestedAlternative": "Structured V2Ray Config Synthesis",
-      "observedCount": 12,
+      "observedCount": 18,
       "confidence": 1,
       "evidence": [],
-      "lastObservedAt": "2026-09-02T17:08:43.920Z"
+      "lastObservedAt": "2026-09-02T18:14:17.139Z"
     },
     {
       "id": "fail_1788368262824_44e022",
@@ -3530,6 +4421,18 @@
         "act_1788370942550_call_ec5a349e60584f8998b11403"
       ],
       "lastObservedAt": "2026-09-02T17:42:22.558Z"
+    },
+    {
+      "id": "fail_1788372533712_56affa",
+      "strategyOrTool": "test_persistent_tool",
+      "failedUnderConditions": {},
+      "failureType": "EXECUTION_ERROR",
+      "reason": "Persistent test error 1788372858114",
+      "suggestedAlternative": "Alternative path",
+      "observedCount": 5,
+      "confidence": 1,
+      "evidence": [],
+      "lastObservedAt": "2026-09-02T18:14:18.114Z"
     }
   ],
   "strategies": [

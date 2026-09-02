@@ -7,8 +7,22 @@ export type PermissionScope =
   | 'memory.read'
   | 'memory.write';
 
-export type ToolStatus = 'candidate' | 'testing' | 'active' | 'deprecated' | 'quarantined';
+export type ToolStatus = 'candidate' | 'testing' | 'active' | 'error' | 'deprecated' | 'quarantined';
 export type ToolHealthStatus = 'healthy' | 'degraded' | 'failing' | 'quarantined';
+
+export type ToolErrorType =
+  | 'INVALID_ARGUMENTS'
+  | 'MISSING_REQUIRED_ARGUMENT'
+  | 'INVALID_ARGUMENT_TYPE'
+  | 'INVALID_ARGUMENT_VALUE'
+  | 'TOOL_NOT_FOUND'
+  | 'TOOL_EXECUTION_ERROR'
+  | 'TOOL_TIMEOUT'
+  | 'TOOL_DEPENDENCY_ERROR'
+  | 'TOOL_QUARANTINED'
+  | 'TOOL_TEST_FAILED'
+  | 'DUPLICATE_INVALID_TOOL_CALL'
+  | 'ARGUMENT_REPAIR_BLOCKED';
 
 export interface ToolQualityMetrics {
   successRate: number;
@@ -50,6 +64,14 @@ export interface ToolResult {
     type: string;
     message: string;
     details?: string;
+    tool?: string;
+    missing?: string[];
+    invalid?: string[];
+    schema?: any;
+    repairable?: boolean;
+    fingerprint?: string;
+    reason?: string;
+    required?: string;
   } | null;
   metadata?: {
     duration_ms?: number;
@@ -57,6 +79,8 @@ export interface ToolResult {
     timestamp?: string;
     version?: string;
     evaluationScore?: number;
+    fingerprint?: string;
+    repairAttempt?: number;
     [key: string]: any;
   };
 }
@@ -178,6 +202,7 @@ export type ExecutionStatus =
   | 'idle'
   | 'running'
   | 'paused'
+  | 'repairing_arguments'
   | 'verifying'
   | 'verified'
   | 'completing'
@@ -197,8 +222,20 @@ export interface AgentState {
   pendingActions: string[];
   iterationCount: number;
   maxIterations: number;
-  toolHistory: Array<{ tool: string; args: any; success: boolean; timestamp: string }>;
-  errors: Array<{ message: string; tool?: string; timestamp: string; diagnosed_cause?: string }>;
+  argumentRepairAttempts: number;
+  maxArgumentRepairAttempts: number;
+  argumentRepairState?: {
+    tool: string;
+    attempts: number;
+    maxAttempts: number;
+    lastFingerprint: string;
+    missingFields: string[];
+    invalidFields: string[];
+    status: 'repairing' | 'repaired' | 'failed';
+    instruction?: string;
+  };
+  toolHistory: Array<{ actionId?: string; tool: string; args: any; success: boolean; timestamp: string; duration_ms?: number; isRepair?: boolean }>;
+  errors: Array<{ actionId?: string; message: string; tool?: string; timestamp: string; diagnosed_cause?: string; errorType?: string }>;
   experiments: string[];
   artifacts: ArtifactMetadata[];
   validationStatus: {

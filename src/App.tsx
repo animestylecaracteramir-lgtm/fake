@@ -32,6 +32,8 @@ const DEFAULT_STATE: AgentState = {
     isVerified: false,
   },
   postCompletionExecutionAttempts: 0,
+  argumentRepairAttempts: 0,
+  maxArgumentRepairAttempts: 2,
 };
 
 export const App: React.FC = () => {

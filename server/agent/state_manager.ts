@@ -59,6 +59,8 @@ export class StateManager {
       pendingActions: [],
       iterationCount: 0,
       maxIterations: 25,
+      argumentRepairAttempts: 0,
+      maxArgumentRepairAttempts: 2,
       toolHistory: [],
       errors: [],
       experiments: [],
@@ -147,23 +149,50 @@ export class StateManager {
       this.state.completedActions.push(action);
     }
 
-    // Only record in toolHistory once per action
-    if (action.tool && !this.state.toolHistory.some(t => t.timestamp === action.timestamp && t.tool === action.tool)) {
-      this.state.toolHistory.push({
-        tool: action.tool,
-        args: action.arguments,
-        success: action.status === 'success',
-        timestamp: action.timestamp,
-      });
+    // Canonical single-record tracking for toolHistory
+    if (action.tool) {
+      const histIdx = this.state.toolHistory.findIndex(t => (t.actionId && t.actionId === action.id) || (t.timestamp === action.timestamp && t.tool === action.tool));
+      if (histIdx >= 0) {
+        this.state.toolHistory[histIdx] = {
+          ...this.state.toolHistory[histIdx],
+          actionId: action.id,
+          tool: action.tool,
+          args: action.arguments !== undefined ? action.arguments : this.state.toolHistory[histIdx].args,
+          success: action.status === 'success',
+          duration_ms: action.duration_ms !== undefined ? action.duration_ms : this.state.toolHistory[histIdx].duration_ms,
+        };
+      } else {
+        this.state.toolHistory.push({
+          actionId: action.id,
+          tool: action.tool,
+          args: action.arguments,
+          success: action.status === 'success',
+          timestamp: action.timestamp,
+          duration_ms: action.duration_ms,
+        });
+      }
     }
 
-    // Only record in errors once
-    if (action.status === 'failed' && action.result?.error && !this.state.errors.some(e => e.timestamp === action.timestamp && e.tool === action.tool)) {
-      this.state.errors.push({
-        message: action.result.error.message,
-        tool: action.tool,
-        timestamp: action.timestamp,
-      });
+    // Canonical single-record tracking for errors
+    if (action.status === 'failed' && action.result?.error) {
+      const errIdx = this.state.errors.findIndex(e => (e.actionId && e.actionId === action.id) || (e.timestamp === action.timestamp && e.tool === action.tool));
+      if (errIdx >= 0) {
+        this.state.errors[errIdx] = {
+          actionId: action.id,
+          message: action.result.error.message,
+          tool: action.tool,
+          timestamp: action.timestamp,
+          errorType: action.result.error.type,
+        };
+      } else {
+        this.state.errors.push({
+          actionId: action.id,
+          message: action.result.error.message,
+          tool: action.tool,
+          timestamp: action.timestamp,
+          errorType: action.result.error.type,
+        });
+      }
     }
 
     this.saveToDisk();
@@ -185,30 +214,54 @@ export class StateManager {
       };
 
       const updated = this.state.completedActions[existingIdx];
-      // Update toolHistory if tool exists
+      // Update existing toolHistory record in-place
       if (updated.tool) {
-        const histIdx = this.state.toolHistory.findIndex(t => t.timestamp === updated.timestamp && t.tool === updated.tool);
+        const histIdx = this.state.toolHistory.findIndex(t => (t.actionId && t.actionId === actionId) || (t.timestamp === updated.timestamp && t.tool === updated.tool));
         if (histIdx >= 0) {
-          this.state.toolHistory[histIdx].success = updated.status === 'success';
+          this.state.toolHistory[histIdx] = {
+            ...this.state.toolHistory[histIdx],
+            actionId,
+            tool: updated.tool,
+            args: updated.arguments !== undefined ? updated.arguments : this.state.toolHistory[histIdx].args,
+            success: updated.status === 'success',
+            duration_ms: updated.duration_ms !== undefined ? updated.duration_ms : this.state.toolHistory[histIdx].duration_ms,
+          };
         } else {
           this.state.toolHistory.push({
+            actionId,
             tool: updated.tool,
             args: updated.arguments,
             success: updated.status === 'success',
             timestamp: updated.timestamp,
+            duration_ms: updated.duration_ms,
           });
         }
       }
 
-      // Update errors if failed
+      // Update existing error record in-place
       if (updated.status === 'failed' && updated.result?.error) {
-        const errExists = this.state.errors.some(e => e.timestamp === updated.timestamp && e.tool === updated.tool);
-        if (!errExists) {
-          this.state.errors.push({
+        const errIdx = this.state.errors.findIndex(e => (e.actionId && e.actionId === actionId) || (e.timestamp === updated.timestamp && e.tool === updated.tool));
+        if (errIdx >= 0) {
+          this.state.errors[errIdx] = {
+            actionId,
             message: updated.result.error.message,
             tool: updated.tool,
             timestamp: updated.timestamp,
+            errorType: updated.result.error.type,
+          };
+        } else {
+          this.state.errors.push({
+            actionId,
+            message: updated.result.error.message,
+            tool: updated.tool,
+            timestamp: updated.timestamp,
+            errorType: updated.result.error.type,
           });
+        }
+      } else if (updated.status === 'success') {
+        const errIdx = this.state.errors.findIndex(e => e.actionId === actionId);
+        if (errIdx >= 0) {
+          this.state.errors.splice(errIdx, 1);
         }
       }
 
@@ -216,6 +269,29 @@ export class StateManager {
       return true;
     }
     return false;
+  }
+
+  public setArgumentRepairState(repairState: AgentState['argumentRepairState']): void {
+    this.state.argumentRepairState = repairState;
+    if (repairState?.status === 'repairing') {
+      this.state.status = 'repairing_arguments';
+    }
+    this.saveToDisk();
+  }
+
+  public clearArgumentRepairState(): void {
+    this.state.argumentRepairState = undefined;
+    this.state.argumentRepairAttempts = 0;
+    if (this.state.status === 'repairing_arguments') {
+      this.state.status = 'running';
+    }
+    this.saveToDisk();
+  }
+
+  public incrementArgumentRepairAttempts(): number {
+    this.state.argumentRepairAttempts = (this.state.argumentRepairAttempts || 0) + 1;
+    this.saveToDisk();
+    return this.state.argumentRepairAttempts;
   }
 
   public addArtifact(artifact: ArtifactMetadata): void {

@@ -743,6 +743,241 @@ export class VerificationTestSuite {
       return `Verified completion idempotency: 3 invocations produced exactly 1 completion event and preserved terminal state.`;
     });
 
+    // 24. REGRESSION TEST 1: Missing Required Arguments
+    await this.runTest(results, 24, 'REGRESSION TEST 1: Missing Required Arguments -> INVALID_ARGUMENTS', 'Argument Repair', async () => {
+      registry.resetInvocationTracker();
+      const res = await registry.executeTool('create_python_file', { code: "print('x')" });
+
+      if (res.success) {
+        throw new Error('Expected failure for missing required filepath, but tool succeeded');
+      }
+      if (res.error?.type !== 'INVALID_ARGUMENTS') {
+        throw new Error(`Expected error type 'INVALID_ARGUMENTS', got '${res.error?.type}'`);
+      }
+      if (!res.error?.missing || !res.error.missing.includes('filepath')) {
+        throw new Error(`Expected missing fields to include 'filepath', got: ${JSON.stringify(res.error?.missing)}`);
+      }
+      return `Detected missing parameter 'filepath' with error type INVALID_ARGUMENTS and schema details.`;
+    });
+
+    // 25. REGRESSION TEST 2: Duplicate Invalid Call Hard Guard
+    await this.runTest(results, 25, 'REGRESSION TEST 2: Duplicate Invalid Arguments Blocked', 'Argument Repair', async () => {
+      registry.resetInvocationTracker();
+      const first = await registry.executeTool('create_python_file', { code: "print('x')" });
+      if (first.success || first.error?.type !== 'INVALID_ARGUMENTS') {
+        throw new Error('First call did not fail as expected');
+      }
+
+      // Second identical call
+      const second = await registry.executeTool('create_python_file', { code: "print('x')" });
+      if (second.success) {
+        throw new Error('Second identical call succeeded unexpectedly');
+      }
+      if (second.error?.type !== 'DUPLICATE_INVALID_TOOL_CALL') {
+        throw new Error(`Expected error type 'DUPLICATE_INVALID_TOOL_CALL', got '${second.error?.type}'`);
+      }
+      return `Blocked duplicate invalid call immediately with DUPLICATE_INVALID_TOOL_CALL guard.`;
+    });
+
+    // 26. REGRESSION TEST 3: Invalid First, Corrected Second
+    await this.runTest(results, 26, 'REGRESSION TEST 3: Invalid First, Corrected Second -> Success', 'Argument Repair', async () => {
+      registry.resetInvocationTracker();
+      const first = await registry.executeTool('create_python_file', { code: "print('x')" });
+      if (first.success) throw new Error('First call succeeded unexpectedly');
+
+      const second = await registry.executeTool('create_python_file', { filepath: 'test_recovery.py', code: "print('x')" });
+      if (!second.success) {
+        throw new Error(`Corrected call failed: ${second.error?.message}`);
+      }
+      return `First invocation failed as expected, second corrected invocation succeeded cleanly.`;
+    });
+
+    // 27. REGRESSION TEST 4: Preserved Original Valid Arguments in Instruction
+    await this.runTest(results, 27, 'REGRESSION TEST 4: Argument Repair Preserves Valid Parameters', 'Argument Repair', async () => {
+      const tool = registry.getTool('create_python_file');
+      if (!tool) throw new Error('Tool not found');
+
+      const originalCode = "import math\nprint(math.sqrt(16))";
+      const validation = registry.validateToolArgs('create_python_file', { code: originalCode });
+
+      if (validation?.valid) throw new Error('Validation should have failed for missing filepath');
+
+      // The corrected call uses original valid code + new filepath
+      const executionResult = await registry.executeTool('create_python_file', {
+        code: originalCode,
+        filepath: 'math_test.py',
+      });
+
+      if (!executionResult.success) {
+        throw new Error(`Corrected tool call failed: ${executionResult.error?.message}`);
+      }
+
+      const fileContent = fs.readFileSync(path.join(workspace.rootDir, 'math_test.py'), 'utf-8');
+      if (fileContent !== originalCode) {
+        throw new Error(`File content did not match preserved original code. Got: ${fileContent}`);
+      }
+      return `Corrected invocation successfully preserved original code and added required filepath.`;
+    });
+
+    // 28. REGRESSION TEST 5: Wrong Argument Type Detection
+    await this.runTest(results, 28, 'REGRESSION TEST 5: Wrong Argument Type -> INVALID_ARGUMENT_TYPE', 'Argument Repair', async () => {
+      registry.resetInvocationTracker();
+      // filepath should be string, passing number
+      const res = await registry.executeTool('create_python_file', { filepath: 12345, code: "print('y')" });
+
+      if (res.success) throw new Error('Expected failure for invalid argument type');
+      if (res.error?.type !== 'INVALID_ARGUMENT_TYPE') {
+        throw new Error(`Expected error type 'INVALID_ARGUMENT_TYPE', got '${res.error?.type}'`);
+      }
+      if (!res.error?.invalid || !res.error.invalid.includes('filepath')) {
+        throw new Error(`Expected invalid fields to include 'filepath', got: ${JSON.stringify(res.error?.invalid)}`);
+      }
+      return `Successfully flagged incorrect type for 'filepath' as INVALID_ARGUMENT_TYPE.`;
+    });
+
+    // 29. REGRESSION TEST 6: Unknown Argument Policy
+    await this.runTest(results, 29, 'REGRESSION TEST 6: Deterministic Unknown Argument Detection', 'Argument Repair', async () => {
+      registry.resetInvocationTracker();
+      const res = await registry.executeTool('create_python_file', {
+        filepath: 'clean.py',
+        code: "print('hello')",
+        bogus_extra_field: true,
+      });
+
+      if (res.success) throw new Error('Expected unknown arguments to be rejected under strict schema policy');
+      if (!res.error?.message?.includes('Unknown parameter') && res.error?.type !== 'INVALID_ARGUMENTS') {
+        throw new Error(`Expected deterministic rejection for unknown parameter, got: ${JSON.stringify(res.error)}`);
+      }
+      return `Unknown argument 'bogus_extra_field' deterministically rejected under schema policy.`;
+    });
+
+    // 30. REGRESSION TEST 7: JSON Key Order Invariance in Fingerprint
+    await this.runTest(results, 30, 'REGRESSION TEST 7: Key Order Invariant Canonical Fingerprint', 'Argument Repair', async () => {
+      registry.resetInvocationTracker();
+      // First invalid call
+      const res1 = await registry.executeTool('create_python_file', { a_missing: 'xyz', code: "print('unordered')" });
+      // Second invalid call with keys reordered
+      const res2 = await registry.executeTool('create_python_file', { code: "print('unordered')", a_missing: 'xyz' });
+
+      if (res2.error?.type !== 'DUPLICATE_INVALID_TOOL_CALL') {
+        throw new Error(`Expected duplicate call to be blocked despite key order differences. Got: ${res2.error?.type}`);
+      }
+      return `Key order differences normalized to identical fingerprint; duplicate blocked.`;
+    });
+
+    // 31. REGRESSION TEST 8: Whitespace Normalization in Semantic Fingerprint
+    await this.runTest(results, 31, 'REGRESSION TEST 8: Semantic Whitespace Normalization', 'Argument Repair', async () => {
+      registry.resetInvocationTracker();
+      // First invalid call with trailing whitespace
+      await registry.executeTool('create_python_file', { code: "print('whitespace')  " });
+      // Second invalid call with leading whitespace
+      const res2 = await registry.executeTool('create_python_file', { code: "  print('whitespace')" });
+
+      if (res2.error?.type !== 'DUPLICATE_INVALID_TOOL_CALL') {
+        throw new Error(`Expected whitespace variations to yield identical semantic fingerprint. Got: ${res2.error?.type}`);
+      }
+      return `Semantic whitespace trimming ensured duplicate invalid invocation was blocked.`;
+    });
+
+    // 32. REGRESSION TEST 9: Scoped Repair State Per Tool
+    await this.runTest(results, 32, 'REGRESSION TEST 9: Independent Scoping Per Tool', 'Argument Repair', async () => {
+      registry.resetInvocationTracker();
+      // Fail on create_python_file
+      const resPy = await registry.executeTool('create_python_file', { code: "print('py')" });
+      // Fail on read_file
+      const resRead = await registry.executeTool('read_file', {});
+
+      if (resPy.error?.type !== 'INVALID_ARGUMENTS' || resRead.error?.type !== 'INVALID_ARGUMENTS') {
+        throw new Error('Expected both distinct tools to fail independently on invalid arguments');
+      }
+
+      // Successful call to read_file with valid argument
+      fs.writeFileSync(path.join(workspace.rootDir, 'temp_sample.txt'), 'hello');
+      const readSuccess = await registry.executeTool('read_file', { filepath: 'temp_sample.txt' });
+
+      if (!readSuccess.success) {
+        throw new Error(`read_file failed unexpectedly: ${readSuccess.error?.message}`);
+      }
+
+      return `Repair state independently isolated across distinct tools.`;
+    });
+
+    // 33. REGRESSION TEST 10: Persistent Knowledge Across Restarts
+    await this.runTest(results, 33, 'REGRESSION TEST 10: Persistent Failure Knowledge Survives Restarts', 'Knowledge Engine', async () => {
+      const uniqueReason = `Persistent test error ${Date.now()}`;
+      memory.storeFailure({
+        strategyOrTool: 'test_persistent_tool',
+        failedUnderConditions: {},
+        failureType: 'EXECUTION_ERROR',
+        reason: uniqueReason,
+        suggestedAlternative: 'Alternative path',
+      });
+
+      // Simulate new instance loading from same workspace
+      const newMemory = new KnowledgeStore(workspace);
+      const found = newMemory.queryFailures('test_persistent_tool');
+
+      if (!found.some(f => f.reason === uniqueReason)) {
+        throw new Error('Failure record was not persisted to disk or reloaded by new instance');
+      }
+      return `Failure knowledge persisted and successfully retrieved by freshly initialized KnowledgeStore.`;
+    });
+
+    // 34. REGRESSION TEST 11: Controlled Recovery & No Infinite Looping
+    await this.runTest(results, 34, 'REGRESSION TEST 11: Controlled Recovery & No Infinite Looping', 'Agent Architecture', async () => {
+      const tracker = registry.getInvocationTracker();
+      tracker.reset();
+
+      // Invocations:
+      // 1st: Invalid
+      const call1 = await registry.executeTool('create_python_file', { code: "print('test')" });
+      if (call1.error?.type !== 'INVALID_ARGUMENTS') throw new Error('Call 1 should be INVALID_ARGUMENTS');
+
+      // 2nd: Duplicate -> blocked
+      const call2 = await registry.executeTool('create_python_file', { code: "print('test')" });
+      if (call2.error?.type !== 'DUPLICATE_INVALID_TOOL_CALL') throw new Error('Call 2 should be DUPLICATE_INVALID_TOOL_CALL');
+
+      // 3rd: Duplicate again -> still blocked
+      const call3 = await registry.executeTool('create_python_file', { code: "print('test')" });
+      if (call3.error?.type !== 'DUPLICATE_INVALID_TOOL_CALL') throw new Error('Call 3 should be DUPLICATE_INVALID_TOOL_CALL');
+
+      return `Infinite loop prevented: duplicate invalid attempts were deterministically rejected by hard guard.`;
+    });
+
+    // 35. REGRESSION TEST 12: create_tool Failing Test Arguments Prevents Promotion
+    await this.runTest(results, 35, 'REGRESSION TEST 12: create_tool Failing Test Arguments Prevents Promotion', 'Tool Synthesis', async () => {
+      const badToolName = 'failing_math_tool';
+      const createRes = await registry.executeTool('create_tool', {
+        name: badToolName,
+        description: 'Tool that throws exception during test',
+        parameters: {
+          type: 'object',
+          properties: { val: { type: 'number' } },
+          required: ['val'],
+        },
+        code: `def tool(args):\n    raise ValueError("Intentional syntax or runtime test failure")\n`,
+        test_args: { val: 10 },
+      });
+
+      if (createRes.success) {
+        throw new Error('create_tool should have returned success: false when test execution failed');
+      }
+      if (createRes.error?.type !== 'TOOL_TEST_FAILED') {
+        throw new Error(`Expected error type 'TOOL_TEST_FAILED', got '${createRes.error?.type}'`);
+      }
+
+      const createdMeta = registry.getTool(badToolName);
+      if (!createdMeta) throw new Error('Created tool metadata not found');
+      if (createdMeta.status === 'active') {
+        throw new Error(`Tool was improperly promoted to 'active' status despite test failure! Status: ${createdMeta.status}`);
+      }
+      if (createdMeta.quality?.health !== 'failing') {
+        throw new Error(`Tool quality health expected 'failing', got: ${createdMeta.quality?.health}`);
+      }
+
+      return `create_tool correctly rejected promotion: status is '${createdMeta.status}' and health is '${createdMeta.quality?.health}'.`;
+    });
+
     const durationMs = Date.now() - startTime;
     const passedCount = results.filter(r => r.passed).length;
     return {

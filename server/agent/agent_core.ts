@@ -10,6 +10,7 @@ import { LoopDetector } from './loop_detector';
 import { KnowledgeStore, defaultKnowledgeStore } from '../memory/knowledge_store';
 import { ToolBuilder, defaultToolBuilder } from '../tools/builder';
 import { EvaluatorCore, defaultEvaluator } from '../evaluator/evaluator_core';
+import { buildArgumentRepairInstruction } from '../tools/argument_repair';
 
 export type AgentEventCallback = (event: { type: string; payload: any }) => void;
 
@@ -552,8 +553,19 @@ ${memoryContext}`;
           durationMs,
         });
 
-        // Record failure in negative knowledge if failure occurred
-        if (!toolResult.success && toolResult.error) {
+        // If successful, reset argument repair attempts
+        if (toolResult.success) {
+          this.stateManager.clearArgumentRepairState();
+        }
+
+        const isArgError = !toolResult.success && (
+          toolResult.error?.type === 'INVALID_ARGUMENTS' ||
+          toolResult.error?.type === 'INVALID_ARGUMENT_TYPE' ||
+          toolResult.error?.type === 'DUPLICATE_INVALID_TOOL_CALL'
+        );
+
+        // Record failure in negative knowledge ONLY if it is a genuine execution/strategy failure, not argument formatting
+        if (!toolResult.success && toolResult.error && !isArgError) {
           this.knowledgeStore.storeFailure({
             strategyOrTool: toolName,
             failureType: toolResult.error.type || 'EXECUTION_ERROR',
@@ -574,6 +586,94 @@ ${memoryContext}`;
             const score = toolResult.data?.score || toolResult.data?.overallScore || 0.95;
             this.stateManager.setValidation(true, `Passed ${toolName}`, JSON.stringify(toolResult.data), score);
             this.broadcast('validation_success', { tool: toolName, data: toolResult.data, score });
+          }
+        }
+
+        // Argument Repair Architecture Flow
+        if (isArgError) {
+          const currentAttempts = this.stateManager.getState().argumentRepairAttempts || 0;
+          const toolMeta = this.toolRegistry.getTool(toolName);
+          const canAttemptRepair = !!toolMeta && currentAttempts < 2 && toolResult.error?.type !== 'DUPLICATE_INVALID_TOOL_CALL';
+
+          if (canAttemptRepair) {
+            const nextAttempt = this.stateManager.incrementArgumentRepairAttempts();
+            this.stateManager.setArgumentRepairState({
+              status: 'repairing',
+              tool: toolName,
+              attempts: nextAttempt,
+              maxAttempts: 2,
+              lastFingerprint: toolResult.error?.fingerprint || '',
+              missingFields: toolResult.error?.missing || [],
+              invalidFields: toolResult.error?.invalid || [],
+            });
+
+            this.broadcast('argument_repair_start', {
+              tool: toolName,
+              attempt: nextAttempt,
+              maxAttempts: 2,
+              error: toolResult.error,
+            });
+
+            const repairResult = buildArgumentRepairInstruction({
+              toolName,
+              schema: toolMeta?.parameters || {},
+              missingFields: toolResult.error?.missing,
+              invalidFields: toolResult.error?.invalid,
+              previousArgs: toolArgs,
+              errorMessage: toolResult.error?.message,
+            });
+
+            messages.push({
+              role: 'tool',
+              name: toolName,
+              tool_call_id: tc.id,
+              content: JSON.stringify(toolResult),
+            });
+
+            const instructionContent = typeof repairResult === 'string'
+              ? repairResult
+              : ('instruction' in repairResult ? repairResult.instruction : repairResult.reason);
+
+            messages.push({
+              role: 'user',
+              content: instructionContent || '[ARGUMENT REPAIR REQUIRED] Repair invalid arguments.',
+            });
+
+            // Immediately break to execute the repair step next
+            break;
+          } else {
+            // Repair blocked or exceeded maximum attempts
+            this.stateManager.setArgumentRepairState({
+              status: 'failed',
+              tool: toolName,
+              attempts: currentAttempts,
+              maxAttempts: 2,
+              lastFingerprint: toolResult.error?.fingerprint || '',
+              missingFields: toolResult.error?.missing || [],
+              invalidFields: toolResult.error?.invalid || [],
+            });
+
+            this.broadcast('argument_repair_failed', {
+              tool: toolName,
+              attempts: currentAttempts,
+              reason: toolResult.error?.type === 'DUPLICATE_INVALID_TOOL_CALL'
+                ? 'Duplicate invalid argument payload rejected.'
+                : 'Maximum argument repair attempts exceeded.',
+            });
+
+            messages.push({
+              role: 'tool',
+              name: toolName,
+              tool_call_id: tc.id,
+              content: JSON.stringify(toolResult),
+            });
+
+            messages.push({
+              role: 'user',
+              content: `[ARGUMENT_REPAIR_BLOCKED] Repair for tool '${toolName}' failed (${toolResult.error?.message}). DO NOT re-invoke '${toolName}' with these arguments. Pivot strategy or choose an alternative tool.`,
+            });
+
+            break;
           }
         }
 
