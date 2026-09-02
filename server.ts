@@ -7,9 +7,10 @@ import { defaultWorkspace } from './server/workspace';
 import { defaultToolRegistry } from './server/tools/registry';
 import { defaultAgentCore } from './server/agent/agent_core';
 import { defaultLLMClient } from './server/llm/client';
-import { AppTestSuite } from './server/tests/suite';
+import { VerificationTestSuite } from './server/tests/suite';
 import { V2RayBuilder } from './server/v2ray/builder';
 import { V2RayValidator } from './server/v2ray/validator';
+import { defaultKnowledgeStore } from './server/memory/knowledge_store';
 
 dotenv.config();
 
@@ -76,7 +77,6 @@ async function startServer() {
   app.post('/api/agent/start', async (req, res) => {
     let { goal } = req.body;
     if (!goal && req.body && Object.keys(req.body).length > 0) {
-      // Direct JSON payload passed without a nested goal property
       goal = JSON.stringify(req.body, null, 2);
     }
     if (!goal) {
@@ -88,7 +88,6 @@ async function startServer() {
       goal = String(goal);
     }
 
-    // Start asynchronously in background
     defaultAgentCore.start(goal).catch((err) => {
       console.error('Agent execution error:', err);
     });
@@ -135,11 +134,46 @@ async function startServer() {
     res.json(result);
   });
 
-  // Memory & Documentation API
+  app.post('/api/tools/rollback', (req, res) => {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ error: 'Tool name is required.' });
+    const success = defaultToolRegistry.rollbackTool(name);
+    res.json({ success, message: success ? `Tool '${name}' rolled back to previous version.` : `Rollback failed or no backup found for '${name}'.` });
+  });
+
+  app.post('/api/tools/quarantine', (req, res) => {
+    const { name } = req.body;
+    if (!name) return res.status(400).json({ error: 'Tool name is required.' });
+    const success = defaultToolRegistry.quarantineTool(name);
+    res.json({ success, message: success ? `Tool '${name}' quarantined.` : `Quarantine failed.` });
+  });
+
+  // Knowledge & Memory API
+  app.get('/api/knowledge/diagnostics', (req, res) => {
+    res.json(defaultKnowledgeStore.getDiagnostics());
+  });
+
+  app.get('/api/knowledge/experiences', (req, res) => {
+    const taskType = req.query.taskType as string | undefined;
+    const goal = req.query.goal as string | undefined;
+    const experiences = defaultKnowledgeStore.queryExperiences({ taskType, goal, limit: 50 });
+    res.json({ experiences });
+  });
+
+  app.get('/api/knowledge/strategies', (req, res) => {
+    const taskType = (req.query.taskType as string) || 'general';
+    const strategies = defaultKnowledgeStore.getRankedStrategies(taskType);
+    res.json({ strategies });
+  });
+
+  app.get('/api/knowledge/evaluations', (req, res) => {
+    const limit = parseInt((req.query.limit as string) || '20');
+    const evaluations = defaultKnowledgeStore.getEvaluations(limit);
+    res.json({ evaluations });
+  });
+
   app.get('/api/memory', (req, res) => {
     const query = (req.query.q as string) || '';
-    const category = (req.query.category as string) || 'all';
-
     const memoryFiles = defaultWorkspace.listFiles('memory', true);
     const documents: any[] = [];
 
@@ -155,7 +189,7 @@ async function startServer() {
       }
     }
 
-    res.json({ documents });
+    res.json({ documents, diagnostics: defaultKnowledgeStore.getDiagnostics() });
   });
 
   // Outputs & Artifacts API
@@ -248,7 +282,7 @@ async function startServer() {
   // Test Suite API
   app.post('/api/tests/run', async (req, res) => {
     try {
-      const suiteResults = await AppTestSuite.runAllTests();
+      const suiteResults = await VerificationTestSuite.runAllTests();
       res.json(suiteResults);
     } catch (err: any) {
       res.status(500).json({ error: err.message });
@@ -271,9 +305,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Autonomous Agent server running at:`);
-    console.log(`  - Local:   http://localhost:${PORT}`);
-    console.log(`  - Network: http://127.0.0.1:${PORT}`);
+    console.log(`Self-Evolving Autonomous Agent server running on port ${PORT}`);
   });
 }
 

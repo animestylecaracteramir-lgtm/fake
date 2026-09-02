@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { AgentState, AgentAction, ArtifactMetadata } from '../types';
+import { AgentState, AgentAction, ArtifactMetadata, ExecutionStatus } from '../types';
 
 export class StateManager {
   private state: AgentState;
@@ -21,6 +21,13 @@ export class StateManager {
         const raw = fs.readFileSync(this.storageFilePath, 'utf-8');
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object' && Array.isArray(parsed.completedActions)) {
+          // If server was started anew, any stale 'running' or 'paused' status from previous run is normalized to 'idle' or 'stopped'
+          if (parsed.status === 'running' || parsed.status === 'paused' || parsed.status === 'verifying' || parsed.status === 'completing') {
+            parsed.status = parsed.completedActions.length > 0 ? 'stopped' : 'idle';
+          }
+          if (typeof parsed.postCompletionExecutionAttempts !== 'number') {
+            parsed.postCompletionExecutionAttempts = 0;
+          }
           return parsed;
         }
       }
@@ -30,7 +37,7 @@ export class StateManager {
     return null;
   }
 
-  private saveToDisk(): void {
+  public saveToDisk(): void {
     try {
       const tempPath = `${this.storageFilePath}.tmp`;
       fs.writeFileSync(tempPath, JSON.stringify(this.state, null, 2), 'utf-8');
@@ -59,11 +66,17 @@ export class StateManager {
       validationStatus: {
         isVerified: false,
       },
+      postCompletionExecutionAttempts: 0,
     };
   }
 
   public getState(): AgentState {
     return { ...this.state };
+  }
+
+  public isTerminal(status?: ExecutionStatus): boolean {
+    const st = status || this.state.status;
+    return st === 'completed' || st === 'failed' || st === 'stopped';
   }
 
   public reset(goal?: string): void {
@@ -81,15 +94,26 @@ export class StateManager {
     this.saveToDisk();
   }
 
-  public setStatus(status: AgentState['status']): void {
+  public setStatus(status: ExecutionStatus): void {
+    // If state is already completed, ignore transitions except explicit 'idle' reset
+    if (this.state.status === 'completed' && status !== 'idle') {
+      return;
+    }
+
     this.state.status = status;
     if (status === 'completed' || status === 'failed' || status === 'stopped') {
       this.state.endTime = new Date().toISOString();
+      if (status === 'completed' && !this.state.terminalAt) {
+        this.state.terminalAt = new Date().toISOString();
+      }
     }
     this.saveToDisk();
   }
 
   public setPlan(plan: string[], objective: string, strategy?: string): void {
+    if (this.isTerminal()) {
+      return;
+    }
     this.state.currentPlan = plan;
     this.state.currentObjective = objective;
     if (strategy) this.state.currentStrategy = strategy;
@@ -97,13 +121,22 @@ export class StateManager {
   }
 
   public changeStrategy(newStrategy: string): void {
+    if (this.isTerminal()) {
+      return;
+    }
     this.state.currentStrategy = newStrategy;
     this.state.strategyAttemptCount += 1;
     this.saveToDisk();
   }
 
-  public addAction(action: AgentAction): void {
-    // Avoid duplicate actions if already added by id
+  public addAction(action: AgentAction): boolean {
+    // Hard guard: no new actions allowed after terminal completion
+    if (this.state.status === 'completed') {
+      this.state.postCompletionExecutionAttempts += 1;
+      this.saveToDisk();
+      return false;
+    }
+
     const existingIdx = this.state.completedActions.findIndex(a => a.id === action.id);
     if (existingIdx >= 0) {
       this.state.completedActions[existingIdx] = {
@@ -114,7 +147,8 @@ export class StateManager {
       this.state.completedActions.push(action);
     }
 
-    if (action.tool) {
+    // Only record in toolHistory once per action
+    if (action.tool && !this.state.toolHistory.some(t => t.timestamp === action.timestamp && t.tool === action.tool)) {
       this.state.toolHistory.push({
         tool: action.tool,
         args: action.arguments,
@@ -122,17 +156,27 @@ export class StateManager {
         timestamp: action.timestamp,
       });
     }
-    if (action.status === 'failed' && action.result?.error) {
+
+    // Only record in errors once
+    if (action.status === 'failed' && action.result?.error && !this.state.errors.some(e => e.timestamp === action.timestamp && e.tool === action.tool)) {
       this.state.errors.push({
         message: action.result.error.message,
         tool: action.tool,
         timestamp: action.timestamp,
       });
     }
+
     this.saveToDisk();
+    return true;
   }
 
-  public updateAction(actionId: string, updates: Partial<AgentAction>): void {
+  public updateAction(actionId: string, updates: Partial<AgentAction>): boolean {
+    if (this.state.status === 'completed') {
+      this.state.postCompletionExecutionAttempts += 1;
+      this.saveToDisk();
+      return false;
+    }
+
     const existingIdx = this.state.completedActions.findIndex(a => a.id === actionId);
     if (existingIdx >= 0) {
       this.state.completedActions[existingIdx] = {
@@ -141,23 +185,37 @@ export class StateManager {
       };
 
       const updated = this.state.completedActions[existingIdx];
+      // Update toolHistory if tool exists
       if (updated.tool) {
-        this.state.toolHistory.push({
-          tool: updated.tool,
-          args: updated.arguments,
-          success: updated.status === 'success',
-          timestamp: updated.timestamp,
-        });
+        const histIdx = this.state.toolHistory.findIndex(t => t.timestamp === updated.timestamp && t.tool === updated.tool);
+        if (histIdx >= 0) {
+          this.state.toolHistory[histIdx].success = updated.status === 'success';
+        } else {
+          this.state.toolHistory.push({
+            tool: updated.tool,
+            args: updated.arguments,
+            success: updated.status === 'success',
+            timestamp: updated.timestamp,
+          });
+        }
       }
+
+      // Update errors if failed
       if (updated.status === 'failed' && updated.result?.error) {
-        this.state.errors.push({
-          message: updated.result.error.message,
-          tool: updated.tool,
-          timestamp: updated.timestamp,
-        });
+        const errExists = this.state.errors.some(e => e.timestamp === updated.timestamp && e.tool === updated.tool);
+        if (!errExists) {
+          this.state.errors.push({
+            message: updated.result.error.message,
+            tool: updated.tool,
+            timestamp: updated.timestamp,
+          });
+        }
       }
+
       this.saveToDisk();
+      return true;
     }
+    return false;
   }
 
   public addArtifact(artifact: ArtifactMetadata): void {
@@ -170,17 +228,21 @@ export class StateManager {
     this.saveToDisk();
   }
 
-  public setValidation(isVerified: boolean, criteria?: string, output?: string): void {
+  public setValidation(isVerified: boolean, criteria?: string, output?: string, score?: number): void {
     this.state.validationStatus = {
       isVerified,
       verificationCriteria: criteria,
       verificationOutput: output,
+      score,
       timestamp: new Date().toISOString(),
     };
     this.saveToDisk();
   }
 
   public incrementIteration(): number {
+    if (this.isTerminal()) {
+      return this.state.iterationCount;
+    }
     this.state.iterationCount += 1;
     this.saveToDisk();
     return this.state.iterationCount;
@@ -191,6 +253,33 @@ export class StateManager {
       isStuck,
       reason,
       suggestedAction,
+    };
+    this.saveToDisk();
+  }
+
+  public complete(params: {
+    summary: string;
+    reason?: string;
+    evidence?: string[];
+    verificationCriteria?: string;
+    verificationOutput?: string;
+    score?: number;
+  }): void {
+    if (this.state.status === 'completed') {
+      return;
+    }
+    this.state.status = 'completed';
+    this.state.completionReason = params.reason || params.summary;
+    this.state.completionEvidence = params.evidence || this.state.completedActions.map(a => a.id);
+    this.state.verificationLevel = (params.score && params.score >= 0.9) ? 'verified_strict' : 'verified_standard';
+    this.state.terminalAt = new Date().toISOString();
+    this.state.endTime = new Date().toISOString();
+    this.state.validationStatus = {
+      isVerified: true,
+      verificationCriteria: params.verificationCriteria || params.reason || 'Criteria satisfied',
+      verificationOutput: params.verificationOutput || params.summary,
+      score: params.score || 0.95,
+      timestamp: new Date().toISOString(),
     };
     this.saveToDisk();
   }

@@ -1,0 +1,13 @@
+{
+  "filename": "v2ray_config_validation_final_report.json",
+  "path": "outputs/v2ray_config_validation_final_report.json",
+  "type": "json",
+  "goal": "Find publicly available proxy configuration examples, parse them correctly, validate their syntax and connectivity, and classify them based on protocol-aware validation instead of ICMP ping alone.",
+  "created_at": "2026-09-02T15:38:09.837Z",
+  "validated": true,
+  "validation_result": "All 18 configurations from V2Hive repository parsed and syntax-validated successfully. 100% syntax valid. Network connectivity tests pending.",
+  "source": "generated",
+  "version": "1.0.0",
+  "size_bytes": 3654,
+  "share_link": ""
+}

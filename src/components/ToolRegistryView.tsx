@@ -12,7 +12,11 @@ import {
   Terminal,
   FileCode,
   Sparkles,
-  Info
+  Info,
+  RotateCcw,
+  ShieldAlert,
+  Activity,
+  HeartPulse
 } from 'lucide-react';
 import { ToolMetadata, ToolResult } from '../types';
 
@@ -60,7 +64,6 @@ export const ToolRegistryView: React.FC = () => {
 
   useEffect(() => {
     if (selectedTool) {
-      // Build sample arguments from parameters
       const sample: Record<string, any> = {};
       const props = selectedTool.parameters?.properties || {};
       for (const [key, propDef] of Object.entries(props)) {
@@ -104,6 +107,7 @@ export const ToolRegistryView: React.FC = () => {
 
       const data = await res.json();
       setTestResult(data);
+      fetchTools(); // Refresh quality metrics
     } catch (err: any) {
       setTestResult({
         success: false,
@@ -112,6 +116,38 @@ export const ToolRegistryView: React.FC = () => {
       });
     } finally {
       setIsTesting(false);
+    }
+  };
+
+  const handleRollback = async () => {
+    if (!selectedTool) return;
+    try {
+      const res = await fetch('/api/tools/rollback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: selectedTool.name }),
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchTools();
+    } catch (err: any) {
+      alert(`Rollback failed: ${err.message}`);
+    }
+  };
+
+  const handleQuarantine = async () => {
+    if (!selectedTool) return;
+    try {
+      const res = await fetch('/api/tools/quarantine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: selectedTool.name }),
+      });
+      const data = await res.json();
+      alert(data.message);
+      fetchTools();
+    } catch (err: any) {
+      alert(`Quarantine action failed: ${err.message}`);
     }
   };
 
@@ -139,31 +175,32 @@ export const ToolRegistryView: React.FC = () => {
 
       const data = await res.json();
       if (data.success) {
-        setCreateMsg(`Tool '${newToolName}' created and registered!`);
+        setCreateMsg(`Tool '${newToolName}' synthesized and tested successfully!`);
         setIsCreating(false);
+        setNewToolName('');
+        setNewToolDesc('');
         fetchTools();
       } else {
-        setCreateMsg(`Error: ${data.error?.message || 'Creation failed'}`);
+        setCreateMsg(`Synthesis failed: ${data.error?.message || 'Unknown error'}`);
       }
     } catch (err: any) {
-      setCreateMsg(`Error: ${err.message}`);
+      setCreateMsg(`Network error: ${err.message}`);
     }
   };
 
-  const categories = ['all', 'web', 'python', 'environment', 'file', 'agent', 'memory', 'validation', 'v2ray', 'custom'];
+  const categories = ['all', 'learning', 'validation', 'v2ray', 'memory', 'custom', 'python', 'file', 'agent'];
 
-  const filteredTools = tools.filter(t => {
-    if (categoryFilter !== 'all' && t.category !== categoryFilter) return false;
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      return t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q);
-    }
-    return true;
+  const filteredTools = tools.filter((t) => {
+    const matchesCat = categoryFilter === 'all' || t.category === categoryFilter;
+    const matchesSearch =
+      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCat && matchesSearch;
   });
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-mono">
-      {/* Top Bar */}
+      {/* Top Banner */}
       <div className="bg-[#0c0c0c] rounded-2xl p-5 border border-[#222] shadow-xl flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-[#111] border border-[#333] text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.25)]">
@@ -171,10 +208,10 @@ export const ToolRegistryView: React.FC = () => {
           </div>
           <div>
             <h2 className="text-base font-bold text-white tracking-widest uppercase">
-              Tools & Self-Extending Engine
+              Autonomous Tool Registry & Health Metrics
             </h2>
             <p className="text-xs text-zinc-500 font-sans">
-              {tools.length} active tools &middot; Autonomous execution & live sandboxed testing
+              Sandboxed execution, quality scoring, automated rollback, and dynamic synthesis.
             </p>
           </div>
         </div>
@@ -193,10 +230,10 @@ export const ToolRegistryView: React.FC = () => {
 
           <button
             onClick={() => setIsCreating(!isCreating)}
-            className="px-3 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-all flex items-center gap-1.5 shadow-[0_0_10px_rgba(59,130,246,0.3)] uppercase tracking-wider"
+            className="px-3.5 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors flex items-center gap-1.5 shadow-[0_0_10px_rgba(59,130,246,0.3)] uppercase tracking-wider"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Create Custom Tool</span>
+            <span>Synthesize Tool</span>
           </button>
         </div>
       </div>
@@ -306,6 +343,7 @@ export const ToolRegistryView: React.FC = () => {
         <div className="lg:col-span-5 space-y-2.5">
           {filteredTools.map((tool) => {
             const isSelected = selectedTool?.name === tool.name;
+            const health = tool.quality?.health || 'healthy';
             return (
               <div
                 key={tool.name}
@@ -327,15 +365,30 @@ export const ToolRegistryView: React.FC = () => {
                       </span>
                     )}
                   </div>
-                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded capitalize ${
-                    isSelected ? 'bg-blue-950/80 text-blue-300 border border-blue-500/40' : 'bg-[#161616] text-zinc-400 border border-[#2a2a2a]'
-                  }`}>
-                    {tool.category}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded capitalize ${
+                      health === 'healthy' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40' :
+                      health === 'quarantined' ? 'bg-rose-950 text-rose-300 border border-rose-500/40' :
+                      'bg-amber-950 text-amber-300 border border-amber-500/40'
+                    }`}>
+                      {health}
+                    </span>
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded capitalize ${
+                      isSelected ? 'bg-blue-950/80 text-blue-300 border border-blue-500/40' : 'bg-[#161616] text-zinc-400 border border-[#2a2a2a]'
+                    }`}>
+                      {tool.category}
+                    </span>
+                  </div>
                 </div>
                 <p className={`text-xs font-sans line-clamp-2 ${isSelected ? 'text-zinc-300' : 'text-zinc-500'}`}>
                   {tool.description}
                 </p>
+                {tool.quality && (
+                  <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#1a1a1a] text-[10px] text-zinc-500">
+                    <span>Calls: {tool.quality.usageCount}</span>
+                    <span className="text-emerald-400 font-bold">Success: {(tool.quality.successRate * 100).toFixed(0)}%</span>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -358,10 +411,47 @@ export const ToolRegistryView: React.FC = () => {
                     {selectedTool.description}
                   </p>
                 </div>
-                <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-[#161616] border border-[#333] text-blue-400 font-medium capitalize">
-                  {selectedTool.category}
-                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleRollback}
+                    title="Rollback to previous version backup"
+                    className="p-2 rounded-lg bg-[#161616] hover:bg-[#202020] text-zinc-400 hover:text-white border border-[#333] transition-colors flex items-center gap-1 text-[11px]"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Rollback</span>
+                  </button>
+                  <button
+                    onClick={handleQuarantine}
+                    title="Quarantine or isolate tool"
+                    className="p-2 rounded-lg bg-[#161616] hover:bg-rose-950 text-zinc-400 hover:text-rose-300 border border-[#333] transition-colors flex items-center gap-1 text-[11px]"
+                  >
+                    <ShieldAlert className="w-3.5 h-3.5" />
+                    <span>Quarantine</span>
+                  </button>
+                </div>
               </div>
+
+              {/* Quality Metrics Strip */}
+              {selectedTool.quality && (
+                <div className="grid grid-cols-4 gap-2.5 p-3 rounded-xl bg-[#080808] border border-[#222]">
+                  <div>
+                    <span className="text-[10px] text-zinc-500 uppercase tracking-wider block">Health</span>
+                    <span className="text-xs font-bold text-emerald-400 uppercase">{selectedTool.quality.health}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-zinc-500 uppercase tracking-wider block">Success</span>
+                    <span className="text-xs font-bold text-white">{(selectedTool.quality.successRate * 100).toFixed(0)}%</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-zinc-500 uppercase tracking-wider block">Executions</span>
+                    <span className="text-xs font-bold text-white">{selectedTool.quality.usageCount}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-zinc-500 uppercase tracking-wider block">Avg Latency</span>
+                    <span className="text-xs font-bold text-blue-400">{selectedTool.quality.avgLatencyMs.toFixed(0)}ms</span>
+                  </div>
+                </div>
+              )}
 
               {/* Parameters Schema Box */}
               <div>
@@ -391,7 +481,7 @@ export const ToolRegistryView: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <Terminal className="w-4 h-4 text-blue-400" />
                     <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-                      Live In-Browser Tool Tester
+                      Live Sandboxed Execution Tester
                     </h4>
                   </div>
                   <button

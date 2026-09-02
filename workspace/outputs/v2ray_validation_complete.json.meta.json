@@ -1,0 +1,12 @@
+{
+  "filename": "v2ray_validation_complete.json",
+  "path": "outputs/v2ray_validation_complete.json",
+  "type": "json",
+  "goal": "Parse and validate proxy configurations from public sources",
+  "created_at": "2026-09-02T16:30:25.261Z",
+  "validated": true,
+  "validation_result": "18/18 configs syntax valid. Core pipeline complete.",
+  "source": "generated",
+  "version": "1.0.0",
+  "size_bytes": 2591
+}

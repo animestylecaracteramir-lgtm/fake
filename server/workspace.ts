@@ -186,10 +186,12 @@ export class WorkspaceManager {
   public sanitizeCredentials(obj: any): any {
     if (!obj || typeof obj !== 'object') return obj;
     const clean = Array.isArray(obj) ? [...obj] : { ...obj };
-    for (const key in clean) {
-      if (['apiKey', 'api_key', 'password', 'secret', 'token', 'authorization'].some(k => key.toLowerCase().includes(k))) {
+    const sensitiveTokens = ['apikey', 'api_key', 'password', 'secret', 'token', 'auth', 'bearer', 'privkey', 'credential'];
+    for (const key of Object.keys(clean)) {
+      const lowerKey = key.toLowerCase();
+      if (sensitiveTokens.some(k => lowerKey.includes(k))) {
         clean[key] = '[REDACTED]';
-      } else if (typeof clean[key] === 'object') {
+      } else if (typeof clean[key] === 'object' && clean[key] !== null) {
         clean[key] = this.sanitizeCredentials(clean[key]);
       }
     }

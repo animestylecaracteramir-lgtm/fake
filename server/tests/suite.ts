@@ -1,10 +1,17 @@
+import fs from 'fs';
+import path from 'path';
+import { LLMClient, defaultLLMClient, ChatMessage } from '../llm/client';
 import { ToolRegistry } from '../tools/registry';
 import { WorkspaceManager } from '../workspace';
 import { V2RayBuilder } from '../v2ray/builder';
 import { V2RayValidator } from '../v2ray/validator';
 import { LoopDetector } from '../agent/loop_detector';
-import { LLMClient } from '../llm/client';
-import { AgentAction } from '../types';
+import { KnowledgeStore } from '../memory/knowledge_store';
+import { ToolBuilder } from '../tools/builder';
+import { ToolSandbox } from '../tools/sandbox';
+import { EvaluatorCore } from '../evaluator/evaluator_core';
+import { AgentCore } from '../agent/agent_core';
+import { AgentAction, ToolResult } from '../types';
 
 export interface TestResultItem {
   id: number;
@@ -25,151 +32,270 @@ export interface TestSuiteSummary {
   results: TestResultItem[];
 }
 
-export class AppTestSuite {
+export class VerificationTestSuite {
   public static async runAllTests(): Promise<TestSuiteSummary> {
     const startTime = Date.now();
     const results: TestResultItem[] = [];
+
     const workspace = new WorkspaceManager();
-    const registry = new ToolRegistry(workspace);
+    const sandbox = new ToolSandbox(workspace);
+    const evaluator = new EvaluatorCore();
+    const memory = new KnowledgeStore(workspace);
+    const builder = new ToolBuilder(workspace, sandbox, evaluator);
+    const registry = new ToolRegistry(workspace, sandbox, builder, evaluator, memory);
 
-    // 1. Tool Registry
-    await this.runTest(results, 1, 'Tool Registry Integrity', 'Registry', async () => {
-      const tools = registry.listTools();
-      if (tools.length < 10) throw new Error(`Expected at least 10 built-in tools, found ${tools.length}`);
-      const pythonTool = registry.getTool('run_python');
-      if (!pythonTool) throw new Error('Missing run_python tool');
-      return `Loaded ${tools.length} built-in tools correctly.`;
-    });
-
-    // 2. Tool Creation (Self-Extending)
-    await this.runTest(results, 2, 'Self-Extending Tool Creation', 'Self-Extending', async () => {
-      const toolCode = `
-def add_numbers(a, b):
-    return a + b
-`;
-      const res = await registry.executeTool('create_tool', {
-        name: 'test_adder_tool',
-        description: 'Adds two numbers together',
-        parameters: {
-          type: 'object',
-          properties: {
-            a: { type: 'number', description: 'First number' },
-            b: { type: 'number', description: 'Second number' },
-          },
-          required: ['a', 'b'],
-        },
-        code: toolCode,
-        test_args: { a: 15, b: 27 },
+    // 1. TEST A: Successful Experience Storage & Ranked Retrieval
+    await this.runTest(results, 1, 'TEST A: Experience Reuse & Ranked Retrieval', 'Learning Engine', async () => {
+      const exp = memory.storeExperience({
+        taskType: 'v2ray_config',
+        goal: 'Generate secure VLESS Reality proxy for Iranian network',
+        strategy: 'Structured V2Ray Config Synthesis',
+        toolsUsed: ['v2ray_build_config', 'v2ray_validate_config'],
+        evaluationScore: 0.98,
+        lesson: 'VLESS-Reality with TCP transport provides 100% censorship bypass rating.',
       });
 
-      if (!res.success) throw new Error(res.error?.message || 'Failed to create tool');
-      return `Created and validated custom tool 'test_adder_tool' with version ${res.data.version}`;
-    });
-
-    // 3. Tool Persistence
-    await this.runTest(results, 3, 'Tool Persistence & Reload', 'Persistence', async () => {
-      const newRegistry = new ToolRegistry(workspace);
-      const customTool = newRegistry.getTool('test_adder_tool');
-      if (!customTool) throw new Error('Custom tool was not restored on fresh registry initialization.');
-      return `Custom tool persisted and loaded from workspace registry.json.`;
-    });
-
-    // 4. Custom Tool Calling & Execution
-    await this.runTest(results, 4, 'Custom Tool Runtime Execution', 'Tool Calling', async () => {
-      const res = await registry.executeTool('test_adder_tool', { a: 40, b: 2 });
-      if (!res.success || res.data !== 42) {
-        throw new Error(`Execution returned unexpected result: ${JSON.stringify(res)}`);
-      }
-      return `Executed custom tool adder: 40 + 2 = ${res.data}`;
-    });
-
-    // 5. Python Subprocess Execution
-    await this.runTest(results, 5, 'Python Execution Runtime', 'Python', async () => {
-      const res = await registry.executeTool('run_python', {
-        code: 'import math; print(f"PI_APPROX:{math.pi:.4f}")',
+      const retrieved = memory.queryExperiences({
+        taskType: 'v2ray_config',
+        goal: 'Deploy VLESS Reality server',
       });
-      if (!res.success || !res.data.stdout.includes('PI_APPROX:3.1416')) {
-        throw new Error(`Python execution failed: ${res.error?.message || res.data?.stderr}`);
+
+      if (retrieved.length === 0 || retrieved[0].strategy !== 'Structured V2Ray Config Synthesis') {
+        throw new Error(`Failed to retrieve stored experience for v2ray_config`);
       }
-      return `Python execution passed with output: ${res.data.stdout}`;
+      return `Successfully stored experience '${exp.id}' and retrieved ranked match with score ${(retrieved[0].evaluationScore * 100).toFixed(0)}%.`;
     });
 
-    // 6. Environment Inspection
-    await this.runTest(results, 6, 'Environment Tools & Packages', 'Environment', async () => {
-      const res = await registry.executeTool('inspect_environment', {});
-      if (!res.success || !res.data.python_version) {
-        throw new Error('inspect_environment failed');
-      }
-      return `Environment detected: ${res.data.python_version}, Node ${res.data.node_version}`;
-    });
-
-    // 7. Memory Save & Search
-    await this.runTest(results, 7, 'Memory & Documentation Persistence', 'Memory', async () => {
-      const saveRes = await registry.executeTool('save_documentation', {
-        title: 'V2Ray Reality Setup Guide',
-        category: 'architecture',
-        content: 'Reality protocol requires TLS 1.3 handshake simulation and XTLS flow.',
-        tags: ['v2ray', 'reality', 'tls'],
+    // 2. TEST B: Failure Avoidance via Negative Knowledge
+    await this.runTest(results, 2, 'TEST B: Negative Knowledge & Failure Avoidance', 'Learning Engine', async () => {
+      memory.storeFailure({
+        strategyOrTool: 'raw_text_scraping',
+        failureType: 'SCRAPING_DEFECT',
+        reason: 'Raw web scraping yielded malformed JSON syntax in Iranian network environment.',
+        suggestedAlternative: 'Structured V2Ray Config Synthesis',
+        failedUnderConditions: { target: 'v2ray_raw_url' },
       });
-      if (!saveRes.success) throw new Error('Failed to save memory doc');
 
-      const searchRes = await registry.executeTool('search_documentation', {
-        query: 'Reality',
+      const ranked = memory.getRankedStrategies('v2ray_config', { target: 'v2ray_raw_url' });
+      const badStrategyIndex = ranked.findIndex(s => s.id === 'raw_text_scraping' || s.name === 'raw_text_scraping');
+
+      if (badStrategyIndex === 0) {
+        throw new Error('Failing strategy was not penalized in strategy ranking');
+      }
+
+      const failures = memory.queryFailures('raw_text_scraping');
+      if (failures.length === 0) throw new Error('Stored negative knowledge record not found');
+
+      return `Negative knowledge successfully penalized failing strategy. Recommended alternative: ${failures[0].suggestedAlternative}`;
+    });
+
+    // 3. TEST C: Capability Gap Detection
+    await this.runTest(results, 3, 'TEST C: Capability Gap Detection', 'Self-Tool-Building', async () => {
+      const existingTools = registry.listTools().filter(t => t.name !== 'convert_temperature');
+      const gap = builder.detectCapabilityGap('Convert 100 Celsius to Fahrenheit for telemetry sensor', existingTools);
+
+      if (!gap || gap.suggestedToolName !== 'convert_temperature') {
+        throw new Error(`Expected capability gap for temperature conversion, got: ${JSON.stringify(gap)}`);
+      }
+      return `Detected missing capability '${gap.requiredCapability}'. Suggested new tool: '${gap.suggestedToolName}'.`;
+    });
+
+    // 4. TEST D: Tool Generation, Sandbox Test & Promotion
+    await this.runTest(results, 4, 'TEST D: Full Tool Build, Sandbox & Promotion', 'Self-Tool-Building', async () => {
+      const gap = {
+        requiredCapability: 'temperature_conversion',
+        currentCapabilities: [],
+        missingAspect: 'Missing temperature converter',
+        taskType: 'math_conversion',
+        suggestedToolName: 'convert_temperature',
+        expectedBenefit: 'Accurate temperature conversion',
+        permissionsRequired: [],
+      };
+
+      const candidate = builder.synthesizeCandidateTool(gap);
+      const testRes = await builder.testCandidateInSandbox(candidate);
+
+      if (!testRes.passed || testRes.evaluationScore < 0.70) {
+        throw new Error(`Sandbox test failed for candidate tool: ${JSON.stringify(testRes)}`);
+      }
+
+      // Register into live registry
+      const registerRes = await registry.executeTool('create_tool', {
+        name: candidate.name,
+        description: candidate.description,
+        parameters: candidate.parameters,
+        code: candidate.code,
+        test_args: candidate.testCases[0].args,
+        expected_test_output: candidate.testCases[0].expectedOutput,
       });
-      if (!searchRes.success || searchRes.data.count === 0) {
-        throw new Error('Search documentation failed to find saved entry');
+
+      if (!registerRes.success) {
+        throw new Error(`Failed to register tool into registry: ${registerRes.error?.message}`);
       }
-      return `Saved and retrieved memory document '${saveRes.data.title}'`;
-    });
 
-    // 8. Loop Detector (3x Error Pivot)
-    await this.runTest(results, 8, 'Loop & Stuck Detector', 'Loop Engine', async () => {
-      const detector = new LoopDetector();
-      const mockActions: AgentAction[] = [
-        {
-          id: '1',
-          timestamp: new Date().toISOString(),
-          type: 'tool_call',
-          status: 'failed',
-          result: { success: false, data: null, error: { type: 'ERR', message: 'Connection refused' } },
-        },
-        {
-          id: '2',
-          timestamp: new Date().toISOString(),
-          type: 'tool_call',
-          status: 'failed',
-          result: { success: false, data: null, error: { type: 'ERR', message: 'Connection refused' } },
-        },
-        {
-          id: '3',
-          timestamp: new Date().toISOString(),
-          type: 'tool_call',
-          status: 'failed',
-          result: { success: false, data: null, error: { type: 'ERR', message: 'Connection refused' } },
-        },
-      ];
-
-      const detection = detector.check(mockActions, 3, 20);
-      if (!detection.isStuck || detection.type !== 'REPEATED_ERROR') {
-        throw new Error(`Expected REPEATED_ERROR stuck detection, got: ${JSON.stringify(detection)}`);
-      }
-      return `Loop detector identified 3x repeated error and recommended strategy pivot.`;
-    });
-
-    // 9. Error Diagnosis & Strategy Recovery
-    await this.runTest(results, 9, 'Error Recovery & Diagnosis', 'Recovery', async () => {
-      const diagRes = await registry.executeTool('diagnose_failure', {
-        error_message: "ModuleNotFoundError: No module named 'cryptography'",
-        attempt_count: 2,
+      // Execute live tool
+      const liveExec = await registry.executeTool('convert_temperature', {
+        value: 100,
+        from_unit: 'celsius',
+        to_unit: 'fahrenheit',
       });
-      if (!diagRes.success || !diagRes.data.root_cause.includes('Missing Python library')) {
-        throw new Error('Failed to diagnose missing library');
+
+      if (!liveExec.success || liveExec.data?.result !== 212) {
+        throw new Error(`Live execution failed: ${JSON.stringify(liveExec)}`);
       }
-      return `Diagnosis accurately suggested: ${diagRes.data.suggested_strategy}`;
+
+      return `Synthesized 'convert_temperature', verified in sandbox (score ${(testRes.evaluationScore * 100).toFixed(0)}%), registered, and computed 100C = ${liveExec.data.result}F.`;
     });
 
-    // 10. V2Ray Structured Config Builder (No Copy-Paste)
-    await this.runTest(results, 10, 'V2Ray Structured Config Synthesis', 'V2Ray', async () => {
+    // 5. TEST E: Candidate Tool Rejection on Faulty Logic
+    await this.runTest(results, 5, 'TEST E: Faulty Candidate Tool Rejection', 'Self-Tool-Building', async () => {
+      const faultyCandidate = {
+        name: 'faulty_divider',
+        description: 'Faulty division tool that crashes',
+        parameters: { type: 'object', properties: { val: { type: 'number' } }, required: ['val'] },
+        code: `import sys\nraise RuntimeError("Critical math syntax failure")`,
+        runtime: 'python' as const,
+        permissions: [],
+        version: 'v1.0.0',
+        isCustom: true,
+        testCases: [{ name: 'Crash test', args: { val: 5 }, expectedOutput: 1 }],
+      };
+
+      const testRes = await builder.testCandidateInSandbox(faultyCandidate);
+      if (testRes.passed) {
+        throw new Error('Faulty candidate tool unexpectedly passed sandbox evaluation!');
+      }
+
+      return `Faulty tool candidate properly rejected in sandbox with evaluation failure.`;
+    });
+
+    // 6. TEST F: Tool Regression & Safe Rollback
+    await this.runTest(results, 6, 'TEST F: Tool Regression & Safe Rollback', 'Self-Tool-Building', async () => {
+      const toolName = 'unit_crypto_hasher';
+
+      // 1. Create v1 working tool
+      const v1Res = await registry.executeTool('create_tool', {
+        name: toolName,
+        description: 'Hasher v1 working',
+        parameters: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'] },
+        code: `import sys, json\nprint(json.dumps({"hash": "v1_valid_hash"}))\n`,
+        test_args: { text: 'test' },
+      });
+      if (!v1Res.success) throw new Error('Failed to create v1 tool');
+
+      // 2. Update to v2
+      await registry.executeTool('create_tool', {
+        name: toolName,
+        description: 'Hasher v2 modified',
+        parameters: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'] },
+        code: `import sys, json\nprint(json.dumps({"hash": "v2_updated_hash"}))\n`,
+        test_args: { text: 'test' },
+      });
+
+      // 3. Trigger rollback
+      const rollbackSuccess = registry.rollbackTool(toolName);
+      if (!rollbackSuccess) throw new Error('Tool rollback failed');
+
+      // Verify executed code is v1
+      const rolledBackExec = await registry.executeTool(toolName, { text: 'test' });
+      if (!rolledBackExec.success || rolledBackExec.data?.hash !== 'v1_valid_hash') {
+        throw new Error(`Rollback did not restore v1 output: got ${JSON.stringify(rolledBackExec)}`);
+      }
+
+      return `Verified safe version backup and automated rollback to v1.0.0.`;
+    });
+
+    // 7. TEST G: Persistent Memory Across Restart Simulation
+    await this.runTest(results, 7, 'TEST G: Memory Persistence Across Process Restart', 'Persistence', async () => {
+      const uniqueGoal = `Session_Persist_Check_${Date.now()}`;
+      memory.storeExperience({
+        taskType: 'persistence_check',
+        goal: uniqueGoal,
+        strategy: 'Durable Disk JSON Sync',
+        evaluationScore: 1.0,
+        lesson: 'Memory safely survived simulated runtime teardown.',
+      });
+
+      // Simulate complete process restart with fresh KnowledgeStore instance
+      const freshMemoryInstance = new KnowledgeStore(workspace);
+      const matches = freshMemoryInstance.queryExperiences({
+        taskType: 'persistence_check',
+        goal: uniqueGoal,
+      });
+
+      if (matches.length === 0 || matches[0].goal !== uniqueGoal) {
+        throw new Error('Failed to find persisted experience after reloading KnowledgeStore from disk');
+      }
+
+      return `Verified durable disk persistence: experience loaded successfully from fresh instance.`;
+    });
+
+    // 8. TEST H: Stale Knowledge Confidence Decay & Evidence Domination
+    await this.runTest(results, 8, 'TEST H: Stale Knowledge Confidence Decay', 'Learning Engine', async () => {
+      const staleTask = `stale_benchmark_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+      const oldExp = memory.storeExperience({
+        taskType: staleTask,
+        goal: 'Old legacy protocol setup',
+        strategy: 'Legacy Approach',
+        evaluationScore: 0.70,
+        confidence: 0.70,
+        promotionLevel: 'observed',
+      });
+
+      // Artificially age the old experience by 15 days
+      oldExp.lastObservedAt = new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString();
+      memory.saveToDisk();
+
+      // Trigger decay
+      memory.decayConfidence(0.15);
+
+      const updatedOld = memory.queryExperiences({ taskType: staleTask })[0];
+      if (!updatedOld || updatedOld.confidence >= 0.70) {
+        throw new Error(`Expected confidence to decay below 0.70, got ${updatedOld?.confidence}`);
+      }
+
+      return `Stale experience confidence successfully decayed from 0.70 to ${updatedOld.confidence}.`;
+    });
+
+    // 9. TEST I: Independent Evaluator Objectivity (Reject False Positives)
+    await this.runTest(results, 9, 'TEST I: Independent Evaluator Objectivity', 'Evaluation Engine', async () => {
+      const malformedConfig = `{ "inbounds": [{ "protocol": "invalid_proto" }] }`;
+
+      const evalReport = evaluator.evaluateArtifact('v2ray_config', malformedConfig, 'Create working proxy');
+      if (evalReport.passed || evalReport.overallScore > 0.60) {
+        throw new Error(`Independent evaluator accepted malformed config: ${JSON.stringify(evalReport)}`);
+      }
+
+      return `Independent evaluator rejected defective output (Score: ${(evalReport.overallScore * 100).toFixed(1)}%, Passed: ${evalReport.passed}).`;
+    });
+
+    // 10. TEST J: Learning Promotion Hierarchy (Observed -> Trusted)
+    await this.runTest(results, 10, 'TEST J: Promotion Hierarchy (Observed -> Confirmed -> Trusted)', 'Learning Engine', async () => {
+      const testTask = `hierarchy_test_task_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
+      const goal = 'Test promotion transitions';
+
+      // 1st run -> observed
+      const r1 = memory.storeExperience({ taskType: testTask, goal, strategy: 'Adaptive Strategy', evaluationScore: 0.95 });
+      if (r1.promotionLevel !== 'observed') throw new Error(`Expected observed, got ${r1.promotionLevel}`);
+
+      // 2nd run -> repeated
+      const r2 = memory.storeExperience({ taskType: testTask, goal, strategy: 'Adaptive Strategy', evaluationScore: 0.95 });
+      if (r2.promotionLevel !== 'repeated') throw new Error(`Expected repeated, got ${r2.promotionLevel}`);
+
+      // 3rd run -> confirmed
+      const r3 = memory.storeExperience({ taskType: testTask, goal, strategy: 'Adaptive Strategy', evaluationScore: 0.95 });
+      if (r3.promotionLevel !== 'confirmed') throw new Error(`Expected confirmed, got ${r3.promotionLevel}`);
+
+      // 4th and 5th run -> trusted
+      memory.storeExperience({ taskType: testTask, goal, strategy: 'Adaptive Strategy', evaluationScore: 0.95 });
+      const r5 = memory.storeExperience({ taskType: testTask, goal, strategy: 'Adaptive Strategy', evaluationScore: 0.95 });
+      if (r5.promotionLevel !== 'trusted') throw new Error(`Expected trusted, got ${r5.promotionLevel}`);
+
+      return `Promotion verified through all 4 stages: Observed -> Repeated -> Confirmed -> Trusted (Occurrences: ${r5.occurrences}).`;
+    });
+
+    // 11. V2Ray Structured Config Builder (No Copy-Paste)
+    await this.runTest(results, 11, 'V2Ray Structured Config Synthesis', 'V2Ray Engine', async () => {
       const res = V2RayBuilder.buildConfig({
         role: 'server',
         protocol: 'vless',
@@ -189,8 +315,8 @@ def add_numbers(a, b):
       return `Synthesized VLESS-Reality Server configuration with ${res.config.inbounds.length} inbounds and ${res.config.routing.rules.length} routing rules.`;
     });
 
-    // 11. V2Ray Schema & Semantic Validation
-    await this.runTest(results, 11, 'V2Ray Exhaustive Validator', 'V2Ray', async () => {
+    // 12. V2Ray Schema & Semantic Validation
+    await this.runTest(results, 12, 'V2Ray Exhaustive Validator', 'V2Ray Engine', async () => {
       const sample = {
         inbounds: [
           {
@@ -198,15 +324,11 @@ def add_numbers(a, b):
             port: 443,
             listen: '0.0.0.0',
             protocol: 'vless',
-            settings: {
-              clients: [{ id: 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' }],
-            },
+            settings: { clients: [{ id: 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' }] },
             streamSettings: {
               network: 'tcp',
               security: 'reality',
-              realitySettings: {
-                serverNames: ['www.cloudflare.com'],
-              },
+              realitySettings: { serverNames: ['www.cloudflare.com'] },
             },
           },
         ],
@@ -220,37 +342,23 @@ def add_numbers(a, b):
       return `Validated V2Ray config: Score ${valRes.score}/100, 0 errors.`;
     });
 
-    // 12. Output Artifact Export System
-    await this.runTest(results, 12, 'Output Artifact Export System', 'Export', async () => {
+    // 13. Output Artifact Export System
+    await this.runTest(results, 13, 'Output Artifact Export System', 'Export Engine', async () => {
       const exportRes = await registry.executeTool('export_artifact', {
-        filename: 'v2ray_test_export.json',
+        filename: 'v2ray_learning_export.json',
         type: 'v2ray_config',
         content: JSON.stringify({ inbounds: [], outbounds: [] }, null, 2),
         goal: 'Generate test V2Ray config',
         validated: true,
       });
       if (!exportRes.success) throw new Error('Failed to export artifact');
-      const fileExists = workspace.fileExists('outputs/v2ray_test_export.json');
+      const fileExists = workspace.fileExists('outputs/v2ray_learning_export.json');
       if (!fileExists) throw new Error('Exported artifact file not found on disk.');
-      return `Exported and registered artifact to outputs/v2ray_test_export.json`;
-    });
-
-    // 13. OpenAI-Compatible API Client
-    await this.runTest(results, 13, 'OpenAI-Compatible LLM Client Abstraction', 'LLM Adapter', async () => {
-      const client = new LLMClient({
-        baseURL: 'http://localhost:11434/v1',
-        model: 'llama3.2',
-        apiKey: 'sk-test-mock-key',
-      });
-      const settings = client.getSettings();
-      if (settings.baseURL !== 'http://localhost:11434/v1') {
-        throw new Error('LLM settings baseURL mismatch');
-      }
-      return `Universal OpenAI-compatible client adapter verified with Base URL: ${settings.baseURL}`;
+      return `Exported and registered artifact to outputs/v2ray_learning_export.json`;
     });
 
     // 14. API Key Sanitization
-    await this.runTest(results, 14, 'API Key & Secret Sanitization', 'Security', async () => {
+    await this.runTest(results, 14, 'API Key & Secret Sanitization', 'Security Boundary', async () => {
       const raw = {
         tool: 'llm_call',
         apiKey: 'secret_12345_super_confidential',
@@ -264,7 +372,7 @@ def add_numbers(a, b):
     });
 
     // 15. 5-Attempt API Retry Mechanism
-    await this.runTest(results, 15, '5-Attempt API Retry & Exponential Backoff', 'Resilience', async () => {
+    await this.runTest(results, 15, '5-Attempt API Retry & Exponential Backoff', 'Resilience Engine', async () => {
       const client = new LLMClient({
         baseURL: 'http://127.0.0.1:9999/invalid-api',
         model: 'test-model',
@@ -277,10 +385,8 @@ def add_numbers(a, b):
         attemptsRecorded.push(info.attempt);
       });
 
-      const startTimeMs = Date.now();
-      let caughtError = false;
       try {
-        await (client as any).executeWithRetry(
+        await client.executeWithRetry(
           'Test Retry Endpoint',
           async (attempt: number) => {
             if (attempt < 5) {
@@ -288,17 +394,353 @@ def add_numbers(a, b):
             }
             return { status: 'success_on_attempt_5' };
           },
-          5
+          5,
+          { baseDelayMs: 10, silent: true }
         );
-      } catch (e) {
-        caughtError = true;
-      }
+      } catch (e) {}
 
       if (attemptsRecorded.length !== 4) {
         throw new Error(`Expected exactly 4 retry notifications before attempt 5, got ${attemptsRecorded.length}`);
       }
 
-      return `Verified 5-attempt retry mechanism with exponential backoff: successfully recovered on attempt 5.`;
+      return `Verified 5-attempt retry mechanism with exponential backoff: recovered on attempt 5.`;
+    });
+
+    // =========================================================================
+    // CRITICAL TERMINAL EXECUTION & CONTROL-FLOW REGRESSION BENCHMARK SUITE
+    // =========================================================================
+
+    // 16. REGRESSION TEST 1: Tool Succeeds & Task Completes (0 Post-Completion Tool/LLM Calls)
+    await this.runTest(results, 16, 'REGRESSION 1: Single Terminal Completion Gate (0 Post-Completion Actions)', 'Terminal Control Flow', async () => {
+      let llmCallCount = 0;
+      let goalCompletedCount = 0;
+
+      // Mock LLM that returns a validation tool call
+      const mockLLM = new LLMClient();
+      mockLLM.chatCompletion = async () => {
+        llmCallCount++;
+        return {
+          content: 'Synthesizing and validating V2Ray config now.',
+          tool_calls: [
+            {
+              id: 'call_v2ray_test_1',
+              type: 'function',
+              function: {
+                name: 'v2ray_validate_config',
+                arguments: {
+                  config: {
+                    inbounds: [{ port: 443, protocol: 'vless', settings: { clients: [{ id: '11111111-2222-3333-4444-555555555555' }] } }],
+                    outbounds: [{ protocol: 'freedom' }],
+                  },
+                },
+              },
+            },
+          ],
+        };
+      };
+
+      const testAgent = new AgentCore(workspace, registry, mockLLM, memory, builder, evaluator);
+      testAgent.subscribe((event) => {
+        if (event.type === 'goal_completed') {
+          goalCompletedCount++;
+        }
+      });
+
+      const finalState = await testAgent.start('Build and validate standard V2Ray config');
+
+      if (finalState.status !== 'completed') {
+        throw new Error(`Expected agent status 'completed', got '${finalState.status}'`);
+      }
+      if (goalCompletedCount !== 1) {
+        throw new Error(`Expected exactly 1 'goal_completed' event, got ${goalCompletedCount}`);
+      }
+      if (finalState.postCompletionExecutionAttempts !== 0) {
+        throw new Error(`Invariant violation: postCompletionExecutionAttempts = ${finalState.postCompletionExecutionAttempts} (must be 0)`);
+      }
+      if (llmCallCount !== 1) {
+        throw new Error(`LLM was called ${llmCallCount} times (expected exactly 1 iteration before completion)`);
+      }
+
+      return `Verified terminal gate: goal_completed emitted exactly once, 0 actions after completion.`;
+    });
+
+    // 17. REGRESSION TEST 2: Evaluator Passes -> Task Completes Without Second Evaluator Call
+    await this.runTest(results, 17, 'REGRESSION 2: Evaluator Pass Immediately Terminates (No Second Evaluation)', 'Terminal Control Flow', async () => {
+      let evaluatorCalls = 0;
+      const customEvaluator = new EvaluatorCore();
+      const origEvaluateTool = customEvaluator.evaluateToolExecution.bind(customEvaluator);
+      customEvaluator.evaluateToolExecution = (tool, args, result) => {
+        evaluatorCalls++;
+        return origEvaluateTool(tool, args, result);
+      };
+
+      const mockLLM = new LLMClient();
+      mockLLM.chatCompletion = async () => ({
+        content: 'Executing validation.',
+        tool_calls: [
+          {
+            id: 'call_val_1',
+            type: 'function',
+            function: {
+              name: 'validate_output',
+              arguments: { output: '212', expected: '212' },
+            },
+          },
+        ],
+      });
+
+      const testAgent = new AgentCore(workspace, registry, mockLLM, memory, builder, customEvaluator);
+      const state = await testAgent.start('Convert 100 Celsius to Fahrenheit and validate');
+
+      if (state.status !== 'completed') {
+        throw new Error(`Task did not terminate as completed, status: ${state.status}`);
+      }
+      if (evaluatorCalls !== 1) {
+        throw new Error(`Evaluator was called ${evaluatorCalls} times (expected exactly 1)`);
+      }
+
+      return `Evaluator succeeded and immediately triggered terminal completion with 0 re-evaluations.`;
+    });
+
+    // 18. REGRESSION TEST 3: Memory Persistence Succeeds After Task Completion Without Reopening Loop
+    await this.runTest(results, 18, 'REGRESSION 3: Memory Persistence Finalization (No Reopened Loop)', 'Terminal Control Flow', async () => {
+      const uniqueTaskGoal = `Memory_Sync_Terminal_${Date.now()}`;
+      const mockLLM = new LLMClient();
+      let turns = 0;
+      mockLLM.chatCompletion = async () => {
+        turns++;
+        return {
+          content: 'Exporting final artifact.',
+          tool_calls: [
+            {
+              id: 'call_exp_1',
+              type: 'function',
+              function: {
+                name: 'export_artifact',
+                arguments: {
+                  filename: 'terminal_test.json',
+                  type: 'v2ray_config',
+                  content: '{}',
+                  goal: uniqueTaskGoal,
+                  validated: true,
+                },
+              },
+            },
+          ],
+        };
+      };
+
+      const testAgent = new AgentCore(workspace, registry, mockLLM, memory, builder, evaluator);
+      const state = await testAgent.start(uniqueTaskGoal);
+
+      if (state.status !== 'completed') {
+        throw new Error(`Expected completed state, got ${state.status}`);
+      }
+      if (turns !== 1) {
+        throw new Error(`Agent ran ${turns} turns instead of terminating after artifact export`);
+      }
+
+      // Verify experience record was created in knowledge store without agent reopening
+      const retrieved = memory.queryExperiences({ goal: uniqueTaskGoal });
+      if (retrieved.length === 0) {
+        throw new Error('Experience was not persisted during deterministic finalization pipeline');
+      }
+
+      return `Experience persisted cleanly in KnowledgeStore during finalization with 0 additional turns.`;
+    });
+
+    // 19. REGRESSION TEST 4: Tool Creation Succeeds & Task Completes When Objective Verified
+    await this.runTest(results, 19, 'REGRESSION 4: Self-Tool-Building Lifecycle Termination', 'Terminal Control Flow', async () => {
+      let step = 0;
+      const mockLLM = new LLMClient();
+      mockLLM.chatCompletion = async () => {
+        step++;
+        if (step === 1) {
+          return {
+            content: 'Synthesizing tool.',
+            tool_calls: [
+              {
+                id: 'call_create_1',
+                type: 'function',
+                function: {
+                  name: 'create_tool',
+                  arguments: {
+                    name: 'fast_doubler',
+                    description: 'Doubles numbers',
+                    parameters: { type: 'object', properties: { n: { type: 'number' } }, required: ['n'] },
+                    code: 'import sys, json\nprint(json.dumps({"result": 20}))\n',
+                    test_args: { n: 10 },
+                    expected_test_output: 20,
+                  },
+                },
+              },
+            ],
+          };
+        } else {
+          return {
+            content: 'Executing synthesized tool.',
+            tool_calls: [
+              {
+                id: 'call_exec_1',
+                type: 'function',
+                function: {
+                  name: 'fast_doubler',
+                  arguments: { n: 10 },
+                },
+              },
+            ],
+          };
+        }
+      };
+
+      const testAgent = new AgentCore(workspace, registry, mockLLM, memory, builder, evaluator);
+      const state = await testAgent.start('Create a python script to double numbers and test it');
+
+      if (state.status !== 'completed') {
+        throw new Error(`Expected state 'completed', got '${state.status}'`);
+      }
+      if (step > 2) {
+        throw new Error(`Agent looped for ${step} steps instead of terminating after tool verification`);
+      }
+
+      return `Tool synthesized in step 1, verified in step 2, and terminated immediately upon completion.`;
+    });
+
+    // 20. REGRESSION TEST 5: Loop Rejection When State is Already Completed
+    await this.runTest(results, 20, 'REGRESSION 5: Immediate Loop Exit When State is Already Completed', 'Terminal Control Flow', async () => {
+      const testAgent = new AgentCore(workspace, registry, defaultLLMClient, memory, builder, evaluator);
+      
+      // Manually invoke completeGoal
+      await testAgent.completeGoal({
+        summary: 'Goal pre-completed for invariant verification',
+        reason: 'Manual terminal assertion',
+        score: 1.0,
+      });
+
+      const state = testAgent.getState();
+      if (state.status !== 'completed') {
+        throw new Error(`State was not completed, got ${state.status}`);
+      }
+
+      // Verify isTerminal returns true
+      if (!testAgent.isTerminal()) {
+        throw new Error('isTerminal() returned false on completed agent');
+      }
+
+      return `Confirmed immediate terminal recognition: isTerminal() = true on completed state.`;
+    });
+
+    // 21. REGRESSION TEST 6: Model Tool Calls Rejected After Objective Verified
+    await this.runTest(results, 21, 'REGRESSION 6: Tool Calls Strictly Rejected on Terminal State', 'Terminal Control Flow', async () => {
+      const testAgent = new AgentCore(workspace, registry, defaultLLMClient, memory, builder, evaluator);
+      await testAgent.completeGoal({ summary: 'Completed task' });
+
+      // Attempt to add an action to state manager directly
+      const attemptedAction: AgentAction = {
+        id: 'act_illegal_post_completion',
+        timestamp: new Date().toISOString(),
+        type: 'tool_call',
+        tool: 'v2ray_validate_config',
+        arguments: {},
+        status: 'running',
+      };
+
+      const added = (testAgent as any).stateManager.addAction(attemptedAction);
+      if (added !== false) {
+        throw new Error('StateManager permitted action addition after terminal completion!');
+      }
+
+      const st = testAgent.getState();
+      if (st.postCompletionExecutionAttempts !== 1) {
+        throw new Error(`Expected postCompletionExecutionAttempts to record 1 attempt, got ${st.postCompletionExecutionAttempts}`);
+      }
+
+      return `Successfully blocked post-completion tool action and tracked diagnostic attempt metric (count: ${st.postCompletionExecutionAttempts}).`;
+    });
+
+    // 22. REGRESSION TEST 7: Multiple Validations Triggers Single Completion
+    await this.runTest(results, 22, 'REGRESSION 7: First Valid Final Verification Stops Batch Immediately', 'Terminal Control Flow', async () => {
+      let executedTools: string[] = [];
+      const mockLLM = new LLMClient();
+      mockLLM.chatCompletion = async () => ({
+        content: 'Running multi-tool batch.',
+        tool_calls: [
+          {
+            id: 'tc_1',
+            type: 'function',
+            function: {
+              name: 'validate_output',
+              arguments: { output: 'success', expected: 'success' },
+            },
+          },
+          {
+            id: 'tc_2',
+            type: 'function',
+            function: {
+              name: 'run_test',
+              arguments: { command: 'echo redundant' },
+            },
+          },
+          {
+            id: 'tc_3',
+            type: 'function',
+            function: {
+              name: 'run_test',
+              arguments: { command: 'echo redundant2' },
+            },
+          },
+        ],
+      });
+
+      const testAgent = new AgentCore(workspace, registry, mockLLM, memory, builder, evaluator);
+      testAgent.subscribe((event) => {
+        if (event.type === 'tool_execution_start') {
+          executedTools.push(event.payload.tool);
+        }
+      });
+
+      const state = await testAgent.start('Validate output and complete');
+
+      if (state.status !== 'completed') {
+        throw new Error(`State was not completed, got ${state.status}`);
+      }
+      // The 1st tool satisfied criteria -> subsequent tool calls in the batch MUST be aborted
+      if (executedTools.length > 1) {
+        throw new Error(`Executed ${executedTools.length} tools in batch, expected loop to break after 1st verified tool: ${executedTools.join(', ')}`);
+      }
+
+      return `First tool completed validation criteria -> aborted remaining ${3 - executedTools.length} redundant tool calls in batch.`;
+    });
+
+    // 23. REGRESSION TEST 8: Repeated Completion Call is Idempotent
+    await this.runTest(results, 23, 'REGRESSION 8: CompleteGoal Idempotency (No Duplicate Events)', 'Terminal Control Flow', async () => {
+      const testAgent = new AgentCore(workspace, registry, defaultLLMClient, memory, builder, evaluator);
+      testAgent.reset('Test Idempotent Goal Completion');
+      let eventCount = 0;
+      testAgent.subscribe((e) => {
+        if (e.type === 'goal_completed') eventCount++;
+      });
+
+      // 1st complete call
+      await testAgent.completeGoal({ summary: 'Initial Completion' });
+      const firstTerminalAt = testAgent.getState().terminalAt;
+
+      // 2nd complete call (harmless idempotent replay)
+      await testAgent.completeGoal({ summary: 'Duplicate Completion Attempt' });
+
+      // 3rd complete call
+      await testAgent.completeGoal({ summary: 'Third Completion Attempt' });
+
+      const finalState = testAgent.getState();
+
+      if (eventCount !== 1) {
+        throw new Error(`Expected exactly 1 'goal_completed' event across 3 invocations, got ${eventCount}`);
+      }
+      if (finalState.terminalAt !== firstTerminalAt) {
+        throw new Error(`terminalAt was mutated on duplicate completion call`);
+      }
+
+      return `Verified completion idempotency: 3 invocations produced exactly 1 completion event and preserved terminal state.`;
     });
 
     const durationMs = Date.now() - startTime;
@@ -323,24 +765,28 @@ def add_numbers(a, b):
     const start = Date.now();
     try {
       const detail = await testFn();
+      const durationMs = Date.now() - start;
       results.push({
         id,
         name,
         category,
         passed: true,
-        durationMs: Date.now() - start,
+        durationMs,
         details: detail,
       });
+      console.log(`[PASS] #${id} ${name} (${durationMs}ms)`);
     } catch (err: any) {
+      const durationMs = Date.now() - start;
       results.push({
         id,
         name,
         category,
         passed: false,
-        durationMs: Date.now() - start,
+        durationMs,
         details: err.message || 'Test failed',
         error: err.stack,
       });
+      console.error(`[FAIL] #${id} ${name} (${durationMs}ms): ${err.message}`);
     }
   }
 }

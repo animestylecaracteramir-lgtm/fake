@@ -3,7 +3,7 @@
     {
       "name": "test_adder_tool",
       "description": "Adds two numbers together",
-      "version": "v22",
+      "version": "v24",
       "category": "custom",
       "parameters": {
         "type": "object",
@@ -26,8 +26,128 @@
       "dependencies": [],
       "status": "error",
       "is_custom": true,
-      "created_at": "2026-09-02T07:55:15.258Z",
-      "last_tested": "2026-09-02T07:55:15.258Z"
+      "created_at": "2026-09-02T14:52:03.039Z",
+      "last_tested": "2026-09-02T14:52:03.039Z"
+    },
+    {
+      "name": "convert_temperature",
+      "description": "Converts temperature values between Celsius, Fahrenheit, and Kelvin with verified accuracy.",
+      "version": "v12.0.0",
+      "category": "custom",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "description": "Numeric temperature value to convert."
+          },
+          "from_unit": {
+            "type": "string",
+            "enum": [
+              "celsius",
+              "fahrenheit",
+              "kelvin"
+            ],
+            "description": "Source unit."
+          },
+          "to_unit": {
+            "type": "string",
+            "enum": [
+              "celsius",
+              "fahrenheit",
+              "kelvin"
+            ],
+            "description": "Target unit."
+          }
+        },
+        "required": [
+          "value",
+          "from_unit",
+          "to_unit"
+        ]
+      },
+      "code": "import sys\nimport json\n\ndef run(args):\n    val = float(args.get(\"value\", 0))\n    from_unit = args.get(\"from_unit\", \"celsius\").lower()\n    to_unit = args.get(\"to_unit\", \"fahrenheit\").lower()\n    \n    # Convert to Celsius first\n    if from_unit in [\"c\", \"celsius\"]:\n        c = val\n    elif from_unit in [\"f\", \"fahrenheit\"]:\n        c = (val - 32) * 5 / 9\n    elif from_unit in [\"k\", \"kelvin\"]:\n        c = val - 273.15\n    else:\n        return {\"error\": f\"Unsupported unit: {from_unit}\"}\n        \n    # Convert from Celsius to target\n    if to_unit in [\"c\", \"celsius\"]:\n        res = c\n    elif to_unit in [\"f\", \"fahrenheit\"]:\n        res = (c * 9 / 5) + 32\n    elif to_unit in [\"k\", \"kelvin\"]:\n        res = c + 273.15\n    else:\n        return {\"error\": f\"Unsupported unit: {to_unit}\"}\n        \n    return {\"result\": round(res, 2), \"from_unit\": from_unit, \"to_unit\": to_unit, \"original_value\": val}\n\nif __name__ == \"__main__\":\n    raw = sys.argv[1] if len(sys.argv) > 1 else \"{}\"\n    try:\n        parsed = json.loads(raw)\n        out = run(parsed)\n        print(json.dumps(out))\n    except Exception as e:\n        print(json.dumps({\"error\": str(e)}))\n",
+      "dependencies": [],
+      "status": "active",
+      "is_custom": true,
+      "created_at": "2026-09-02T17:08:44.015Z",
+      "last_tested": "2026-09-02T17:08:44.015Z",
+      "quality": {
+        "successRate": 1,
+        "usageCount": 1,
+        "failureCount": 0,
+        "evaluationScore": 1,
+        "avgLatencyMs": 35,
+        "health": "healthy",
+        "consecutiveFailures": 0,
+        "lastTestedAt": "2026-09-02T17:08:44.015Z"
+      }
+    },
+    {
+      "name": "unit_crypto_hasher",
+      "description": "Hasher v2 modified",
+      "version": "v1.0.0",
+      "category": "custom",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "code": "import sys, json\nprint(json.dumps({\"hash\": \"v1_valid_hash\"}))\n",
+      "dependencies": [],
+      "status": "active",
+      "is_custom": true,
+      "created_at": "2026-09-02T17:08:44.140Z",
+      "last_tested": "2026-09-02T17:08:44.140Z",
+      "quality": {
+        "successRate": 1,
+        "usageCount": 1,
+        "failureCount": 0,
+        "evaluationScore": 1,
+        "avgLatencyMs": 33,
+        "health": "healthy",
+        "consecutiveFailures": 0,
+        "lastTestedAt": "2026-09-02T17:08:44.140Z"
+      }
+    },
+    {
+      "name": "fast_doubler",
+      "description": "Doubles numbers",
+      "version": "v12.0.0",
+      "category": "custom",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "n"
+        ]
+      },
+      "code": "import sys, json\nprint(json.dumps({\"result\": 20}))\n",
+      "dependencies": [],
+      "status": "active",
+      "is_custom": true,
+      "created_at": "2026-09-02T17:08:44.394Z",
+      "last_tested": "2026-09-02T17:08:44.394Z",
+      "quality": {
+        "successRate": 1,
+        "usageCount": 1,
+        "failureCount": 0,
+        "evaluationScore": 1,
+        "avgLatencyMs": 31,
+        "health": "healthy",
+        "consecutiveFailures": 0,
+        "lastTestedAt": "2026-09-02T17:08:44.394Z"
+      }
     }
   ]
 }

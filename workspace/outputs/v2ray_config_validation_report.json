@@ -1,0 +1,290 @@
+{
+  "metadata": {
+    "generated_at": "2026-09-02T19:02:05.118429",
+    "source": {
+      "repository": "cybersecplayground/V2Hive",
+      "url": "https://github.com/cybersecplayground/V2Hive",
+      "retrieved_at": "2026-09-02T15:07:00Z",
+      "description": "Automated collection of V2Ray configurations aggregated from multiple open sources"
+    },
+    "total_configs": 18,
+    "pipeline_status": "PARSING_COMPLETE",
+    "validation_summary": {
+      "syntax_valid": 18,
+      "syntax_invalid": 0,
+      "protocols_found": {
+        "vless": 5,
+        "vmess": 3,
+        "trojan": 5,
+        "ss": 5
+      }
+    }
+  },
+  "configs": [
+    {
+      "id": 1,
+      "original_config": "vless://5077c281-8431-4943-d8cc-6f67d8bb75c6@test2.amin8263.ir:2095?path=🔒%20[By%20EbraSha]&security=&encryption=none&host=test3.amin8263.ir&type=ws",
+      "protocol": "vless",
+      "server": "test2.amin8263.ir",
+      "port": 2095,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "none",
+      "transport": "ws",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 2,
+      "original_config": "vless://94b0cde3-a305-4d89-a192-575339220c7f@104.24.91.178:80?encryption=none&security=none&type=ws&host=flat-rain-e26e-ppal03.cigoyob991.workers.dev&path=/?ed=2560",
+      "protocol": "vless",
+      "server": "104.24.91.178",
+      "port": 80,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "none",
+      "transport": "ws",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 3,
+      "original_config": "vless://bb6e0719-3d1a-4896-bddc-ddc86d682609@104.16.122.4:8080?type=ws&path=/&host=support.sslzoom.us&encryption=none",
+      "protocol": "vless",
+      "server": "104.16.122.4",
+      "port": 8080,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "none",
+      "transport": "ws",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 4,
+      "original_config": "vless://a1c0e039-73f0-48ca-85a8-6fb98f81be6c@172.66.46.246:443?path=🔒%20[By%20EbraSha]&security=tls&encryption=none&host=ELENA.ELENA.ddns-ip.net&fp=chrome&type=ws",
+      "protocol": "vless",
+      "server": "172.66.46.246",
+      "port": 443,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "tls",
+      "transport": "ws",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 5,
+      "original_config": "vless://c24a32f1-b645-47da-98a3-1e7c713229c1@104.18.12.149:8880?path=/api&security=none&encryption=none&host=armenia.chatgpt.com.siasia.ir&type=httpupgrade",
+      "protocol": "vless",
+      "server": "104.18.12.149",
+      "port": 8880,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "none",
+      "transport": "httpupgrade",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 6,
+      "original_config": "vmess://eyJhZGQiOiAiMTA0LjMxLjE2LjMxIiwgImFpZCI6IDAsICJob3N0IjogIiIsICJpZCI6ICJjNDczMWJjNy0xZDc0LTQ3YjktOThlMS02MDFhZmNlYWZhOTgiLCAibmV0IjogIndzIiwgInBhdGgiOiAiL3I1OTI4MzAzNDI3IiwgInBvcnQiOiA4MCwgInBzIjogIlx1ZDgzZFx1ZGU4MCBATGV0c0dldFZQTiBAQ3liZXJTZWNQbGF5Z3JvdW5kIHwgXHVkODNjXHVkZjBkIFx1ZDgzY1x1ZGRlZlx1ZDgzY1x1ZGRmNSBKUCIsICJ0bHMiOiAiIiwgInR5cGUiOiAiYXV0byIsICJzZWN1cml0eSI6ICJhdXRvIiwgInNraXAtY2VydC12ZXJpZnkiOiB0cnVlLCAic25pIjogIiJ9",
+      "protocol": "vmess",
+      "server": "104.31.16.31",
+      "port": 80,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "auto",
+      "transport": "ws",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 7,
+      "original_config": "vmess://eyJhZGQiOiAiMTcyLjY3LjIwMy44NSIsICJhaWQiOiAwLCAiaG9zdCI6ICIiLCAiaWQiOiAiYWE1ODZjZWQtOWM2Yi00ODgyLWFhZTUtZjRmYTM5MTljNzNjIiwgIm5ldCI6ICJ3cyIsICJwYXRoIjogIi8yMzNibG9nIiwgInBvcnQiOiA0NDMsICJwcyI6ICJcdWQ4M2RcdWRlODAgQExldHNHZXRWUE4gQEN5YmVyU2VjUGxheWdyb3VuZCB8IFx1ZDgzY1x1ZGYwZCBcdWQ4M2NcdWRkZmFcdWQ4M2NcdWRkZjggVVMiLCAidGxzIjogInRscyIsICJ0eXBlIjogImF1dG8iLCAic2VjdXJpdHkiOiAiYXV0byIsICJza2lwLWNlcnQtdmVyaWZ5IjogdHJ1ZSwgInNuaSI6ICIifQ==",
+      "protocol": "vmess",
+      "server": "172.67.203.85",
+      "port": 443,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "auto",
+      "transport": "ws",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 8,
+      "original_config": "vmess://eyJ2IjogIjIiLCAicHMiOiAiXHVkODNkXHVkZTgwIEBMZXRzR2V0VlBOIEBDeWJlclNlY1BsYXlncm91bmQgfCBcdWQ4M2NcdWRmMGQgXHVkODNjXHVkZGVlXHVkODNjXHVkZGYzIElOIiwgImFkZCI6ICJoZ3Ryb2phbi56YWJjLm5ldCIsICJwb3J0IjogIjIwODMiLCAidHlwZSI6ICJub25lIiwgImlkIjogImU2Mzk1YzIwLTQ1NzEtNGIzNC1kNmIxLTU1YTVkMzZlNDllYSIsICJhaWQiOiAiMCIsICJuZXQiOiAid3MiLCAicGF0aCI6ICIvZTYzOTVjMjAiLCAiaG9zdCI6ICJoZ3Ryb2phbi56YWJjLm5ldCIsICJ0bHMiOiAidGxzIn0=",
+      "protocol": "vmess",
+      "server": "hgtrojan.zabc.net",
+      "port": 2083,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "auto",
+      "transport": "ws",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 9,
+      "original_config": "trojan://5af7fa3a-ad9c-4346-ba7f-184e89c91758@lm.kaiqsz.com:51075?security=tls&sni=🔒%20[By%20EbraSha]&type=tcp&headerType=none",
+      "protocol": "trojan",
+      "server": "lm.kaiqsz.com",
+      "port": 51075,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "tls",
+      "transport": "tcp",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 10,
+      "original_config": "trojan://0cc6b4268dea0ba8@60.249.3.231:3389?security=tls",
+      "protocol": "trojan",
+      "server": "60.249.3.231",
+      "port": 3389,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "tls",
+      "transport": "tcp",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 11,
+      "original_config": "trojan://7166e17c-286a-4aca-8383-250506f4e1d3@bauhinia01.abzoones.xyz:36501?security=tls",
+      "protocol": "trojan",
+      "server": "bauhinia01.abzoones.xyz",
+      "port": 36501,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "tls",
+      "transport": "tcp",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 12,
+      "original_config": "trojan://BxceQaOe@43.198.13.210:41973?allowInsecure=1&sni=t.me/ripaojiedian&note=@FreeOnlineVPN",
+      "protocol": "trojan",
+      "server": "43.198.13.210",
+      "port": 41973,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "tls",
+      "transport": "tcp",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 13,
+      "original_config": "trojan://662c065f-0495-4598-9a95-2e2fcb38b7b1@57.180.10.65:42423/?type=ws&host=vpn-node.internal&path=/xVpnTrojanWsSvc7f3a&security=tls&sni=vpn-node.internal&alpn=http/1.1&allowInsecure=1",
+      "protocol": "trojan",
+      "server": "57.180.10.65",
+      "port": 42423,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": "tls",
+      "transport": "ws",
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 14,
+      "original_config": "ss://YWVzLTI1Ni1jZmI6cDl6NUJWQURIMllGczNNTg@217.30.10.18:9040",
+      "protocol": "ss",
+      "server": "217.30.10.18",
+      "port": 9040,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": null,
+      "transport": null,
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 15,
+      "original_config": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNToxUld3WGh3ZkFCNWdBRW96VTRHMlBn@45.87.175.181:8080",
+      "protocol": "ss",
+      "server": "45.87.175.181",
+      "port": 8080,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": null,
+      "transport": null,
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 16,
+      "original_config": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpDSm1UQ0N4N0x0dWQ=@108.181.126.122:8388",
+      "protocol": "ss",
+      "server": "108.181.126.122",
+      "port": 8388,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": null,
+      "transport": null,
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 17,
+      "original_config": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpCcGcwRUxtTU05RFN4RGRR@series-a2-me.varzesh360.co:443",
+      "protocol": "ss",
+      "server": "series-a2-me.varzesh360.co",
+      "port": 443,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": null,
+      "transport": null,
+      "source": "cybersecplayground/V2Hive"
+    },
+    {
+      "id": 18,
+      "original_config": "ss://YWVzLTI1Ni1nY206cEtFVzhKUEJ5VFZUTHRN@38.68.134.85:443",
+      "protocol": "ss",
+      "server": "38.68.134.85",
+      "port": 443,
+      "syntax_valid": true,
+      "errors": [],
+      "classification": "parsed_successfully",
+      "security": null,
+      "transport": null,
+      "source": "cybersecplayground/V2Hive"
+    }
+  ],
+  "validation_notes": {
+    "completed_steps": [
+      "Step 1-2: Configuration Collection & Extraction - COMPLETED",
+      "Step 3-4: Protocol Detection & Parsing - COMPLETED",
+      "Step 5: Normalization - COMPLETED",
+      "Step 6: Syntax Validation - COMPLETED"
+    ],
+    "pending_steps": [
+      "Step 7: DNS Validation - PENDING (requires network access)",
+      "Step 8: Network Connectivity Test - PENDING (requires network access)",
+      "Step 9: TLS Validation - PENDING (requires network access)",
+      "Step 10: Protocol-Aware Validation - PENDING (requires network access)",
+      "Step 11: Functional Test - PENDING (requires network access)",
+      "Step 12: Scoring - PENDING",
+      "Step 13: Deduplication - PENDING",
+      "Step 14: Output - PENDING"
+    ],
+    "hard_rules_followed": [
+      "NEVER used ICMP ping as proof of proxy functionality",
+      "NEVER invented missing UUIDs",
+      "NEVER invented passwords",
+      "NEVER invented encryption methods",
+      "NEVER invented SNI or host values",
+      "NEVER changed protocol parameters to make configurations appear valid",
+      "NEVER classified TCP connectivity alone as fully working",
+      "NEVER classified TLS success alone as fully working",
+      "NEVER exposed credentials in logs",
+      "Preserved original configurations exactly",
+      "Stored normalized data separately from original strings"
+    ]
+  }
+}

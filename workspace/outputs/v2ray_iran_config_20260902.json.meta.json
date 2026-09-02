@@ -1,0 +1,13 @@
+{
+  "filename": "v2ray_iran_config_20260902.json",
+  "path": "outputs/v2ray_iran_config_20260902.json",
+  "type": "json",
+  "goal": "Build a strong V2Ray client configuration for Iran with multiple protocols (VLESS-WS-TLS, VLESS-GRPC-Reality, Shadowsocks, Trojan-WS-TLS) for redundancy and bypassing internet restrictions",
+  "created_at": "2026-09-02T08:25:48.835Z",
+  "validated": true,
+  "validation_result": "Validated: score 100, all checks passed. 2 inbounds (SOCKS/HTTP), 6 outbounds (VLESS-WS-TLS, VLESS-GRPC-Reality, Shadowsocks, Trojan-WS-TLS, Direct, Block), 3 routing rules (CN direct, ads block).",
+  "source": "generated",
+  "version": "1.0.0",
+  "size_bytes": 2710,
+  "share_link": ""
+}

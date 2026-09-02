@@ -1,0 +1,12 @@
+{
+  "filename": "V2RAY_IRAN_SETUP_GUIDE.md",
+  "path": "outputs/V2RAY_IRAN_SETUP_GUIDE.md",
+  "type": "markdown",
+  "goal": "Build a strong V2Ray configuration optimized for Iran internet with VLESS + Reality + WebSocket + TLS protocol stack",
+  "created_at": "2026-09-02T08:21:39.654Z",
+  "validated": true,
+  "validation_result": "Complete setup guide with server/client configs, installation instructions, troubleshooting, and security notes.",
+  "source": "generated",
+  "version": "1.0.0",
+  "size_bytes": 5679
+}

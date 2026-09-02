@@ -48,11 +48,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             KERNEL_ACTIVE // EXECUTING
           </span>
         );
-      case 'paused':
+      case 'verifying':
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-amber-950/60 text-amber-400 border border-amber-500/40">
-            <Pause className="w-3 h-3 text-amber-400" />
-            SYS_PAUSED
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-purple-950/60 text-purple-300 border border-purple-500/50">
+            <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
+            VERIFYING_CRITERIA
+          </span>
+        );
+      case 'verified':
+      case 'completing':
+        return (
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-950/60 text-emerald-300 border border-emerald-500/50">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            CRITERIA_VERIFIED // FINALIZING
           </span>
         );
       case 'completed':
@@ -60,6 +68,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-500/40">
             <CheckCircle2 className="w-3 h-3 text-emerald-400" />
             GOAL_VERIFIED // COMPLETE
+          </span>
+        );
+      case 'stuck':
+        return (
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-amber-950/60 text-amber-400 border border-amber-500/40">
+            <AlertTriangle className="w-3 h-3 text-amber-400" />
+            PIVOT_REQUIRED // STUCK
           </span>
         );
       case 'failed':

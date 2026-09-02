@@ -31,6 +31,7 @@ const DEFAULT_STATE: AgentState = {
   validationStatus: {
     isVerified: false,
   },
+  postCompletionExecutionAttempts: 0,
 };
 
 export const App: React.FC = () => {
@@ -50,9 +51,13 @@ export const App: React.FC = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') {
+          const initialStatus = parsed.status === 'running' || parsed.status === 'paused'
+            ? (Array.isArray(parsed.completedActions) && parsed.completedActions.length > 0 ? 'stopped' : 'idle')
+            : (parsed.status || 'idle');
           return {
             ...DEFAULT_STATE,
             ...parsed,
+            status: initialStatus,
             completedActions: Array.isArray(parsed.completedActions) ? parsed.completedActions : [],
           };
         }

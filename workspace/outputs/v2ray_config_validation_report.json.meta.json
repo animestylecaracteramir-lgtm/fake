@@ -1,0 +1,13 @@
+{
+  "filename": "v2ray_config_validation_report.json",
+  "path": "outputs/v2ray_config_validation_report.json",
+  "type": "json",
+  "goal": "Find publicly available proxy configuration examples, parse them correctly, validate their syntax and connectivity, and classify them based on protocol-aware validation instead of ICMP ping alone.",
+  "created_at": "2026-09-02T15:32:51.285Z",
+  "validated": true,
+  "validation_result": "All 18 configurations parsed successfully. Syntax validation passed for all configs. Protocol distribution: 5 VLESS, 3 VMess, 5 Trojan, 5 Shadowsocks. Full network connectivity testing pending.",
+  "source": "generated",
+  "version": "1.0.0",
+  "size_bytes": 10914,
+  "share_link": ""
+}

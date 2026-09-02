@@ -51,10 +51,10 @@ export const TestSuiteView: React.FC = () => {
           </div>
           <div>
             <h2 className="text-base font-bold text-white tracking-widest uppercase">
-              14-Point Autonomous Verification Benchmark
+              23-Point Autonomous & Control-Flow Benchmark
             </h2>
             <p className="text-xs text-zinc-500 font-sans">
-              Validates tool discovery, code sandboxing, self-extension, V2Ray generation, loop detection & sanitization.
+              Validates self-tool-building, memory persistence, independent evaluation, V2Ray generation, and strict terminal execution gates.
             </p>
           </div>
         </div>
@@ -65,7 +65,7 @@ export const TestSuiteView: React.FC = () => {
           className="px-5 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 disabled:bg-[#1a1a1a] disabled:text-zinc-600 rounded-xl transition-all shadow-[0_0_10px_rgba(59,130,246,0.3)] flex items-center gap-2 uppercase tracking-wider"
         >
           <Play className="w-3.5 h-3.5 fill-current" />
-          <span>{isRunning ? 'Running All Benchmarks...' : 'Run 14-Point Test Suite'}</span>
+          <span>{isRunning ? 'Running All Benchmarks...' : 'Run 23-Point Test Suite'}</span>
         </button>
       </div>
 

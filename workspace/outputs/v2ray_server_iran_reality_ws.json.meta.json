@@ -1,0 +1,12 @@
+{
+  "filename": "v2ray_server_iran_reality_ws.json",
+  "path": "outputs/v2ray_server_iran_reality_ws.json",
+  "type": "json",
+  "goal": "Build a strong V2Ray configuration optimized for Iran internet with VLESS + Reality + WebSocket + TLS protocol stack",
+  "created_at": "2026-09-02T08:21:39.605Z",
+  "validated": true,
+  "validation_result": "Validated successfully with score 100. Contains 2 inbounds (WS on 443, TCP on 8443), 3 outbounds, 7 routing rules, and optimized DNS configuration for Iran.",
+  "source": "generated",
+  "version": "1.0.0",
+  "size_bytes": 4686
+}

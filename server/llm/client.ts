@@ -135,13 +135,15 @@ export class LLMClient {
   /**
    * Helper to execute an async API operation with up to maxRetries attempts (default: 5)
    */
-  private async executeWithRetry<T>(
+  public async executeWithRetry<T>(
     operationName: string,
     operation: (attempt: number) => Promise<T>,
-    maxAttempts: number = 5
+    maxAttempts: number = 5,
+    options?: { baseDelayMs?: number; silent?: boolean }
   ): Promise<{ result: T; attemptsUsed: number }> {
     let lastError: any = null;
-    const baseDelayMs = 1000;
+    const baseDelayMs = options?.baseDelayMs ?? 1000;
+    const silent = options?.silent ?? false;
 
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
@@ -151,15 +153,19 @@ export class LLMClient {
         lastError = err;
         const isLastAttempt = attempt >= maxAttempts;
         if (isLastAttempt) {
-          console.error(`[API Max Retries Reached] ${operationName} failed after ${maxAttempts} attempts:`, err?.message || err);
+          if (!silent) {
+            console.error(`[API Max Retries Reached] ${operationName} failed after ${maxAttempts} attempts:`, err?.message || err);
+          }
           break;
         }
 
-        // Exponential backoff + small jitter: 1s, 2s, 4s, 8s...
-        const jitter = Math.floor(Math.random() * 400);
+        // Exponential backoff + small jitter
+        const jitter = Math.floor(Math.random() * (baseDelayMs > 100 ? 400 : 5));
         const delayMs = Math.min(baseDelayMs * Math.pow(2, attempt - 1) + jitter, 10000);
 
-        console.warn(`[API Retry ${attempt}/${maxAttempts}] ${operationName} error: ${err?.message || err}. Retrying in ${delayMs}ms...`);
+        if (!silent) {
+          console.info(`[API Retry ${attempt}/${maxAttempts}] ${operationName}: scheduled retry in ${delayMs}ms (${err?.message || err})`);
+        }
 
         this.notifyRetry({
           attempt,

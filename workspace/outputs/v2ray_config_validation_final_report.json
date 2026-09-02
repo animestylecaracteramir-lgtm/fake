@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "generated_at": "2026-09-02T15:37:00Z",
+    "agent": "V2Ray_Config_Validator",
+    "version": "2.0",
+    "source": {
+      "repository": "cybersecplayground/V2Hive",
+      "url": "https://github.com/cybersecplayground/V2Hive",
+      "retrieved_at": "2026-09-02T15:07:00Z",
+      "description": "Automated collection of V2Ray configurations aggregated from multiple open sources"
+    },
+    "pipeline_status": "PARSING_AND_SYNTAX_VALIDATION_COMPLETE",
+    "total_configs": 18,
+    "validation_summary": {
+      "syntax_valid": 18,
+      "syntax_invalid": 0,
+      "parse_errors": 0,
+      "protocols_found": {
+        "vless": 5,
+        "vmess": 3,
+        "trojan": 5,
+        "ss": 5
+      }
+    }
+  },
+  "configs": [
+    {"id": 1, "protocol": "vless", "server": "test2.amin8263.ir", "port": 2095, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 2, "protocol": "vless", "server": "104.24.91.178", "port": 80, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 3, "protocol": "vless", "server": "104.16.122.4", "port": 8080, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 4, "protocol": "vless", "server": "172.66.46.246", "port": 443, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 5, "protocol": "vless", "server": "104.18.12.149", "port": 8880, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 6, "protocol": "vmess", "server": "104.31.16.31", "port": 80, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 7, "protocol": "vmess", "server": "172.67.203.85", "port": 443, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 8, "protocol": "vmess", "server": "hgtrojan.zabc.net", "port": 2083, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 9, "protocol": "trojan", "server": "lm.kaiqsz.com", "port": 51075, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 10, "protocol": "trojan", "server": "60.249.3.231", "port": 3389, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 11, "protocol": "trojan", "server": "bauhinia01.abzoones.xyz", "port": 36501, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 12, "protocol": "trojan", "server": "43.198.13.210", "port": 41973, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 13, "protocol": "trojan", "server": "57.180.10.65", "port": 42423, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 14, "protocol": "ss", "server": "217.30.10.18", "port": 9040, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 15, "protocol": "ss", "server": "45.87.175.181", "port": 8080, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 16, "protocol": "ss", "server": "108.181.126.122", "port": 8388, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 17, "protocol": "ss", "server": "series-a2-me.varzesh360.co", "port": 443, "syntax_valid": true, "classification": "parsed_successfully"},
+    {"id": 18, "protocol": "ss", "server": "38.68.134.85", "port": 443, "syntax_valid": true, "classification": "parsed_successfully"}
+  ],
+  "validation_notes": {
+    "completed_steps": ["Step 1-2: Collection", "Step 3-4: Parsing", "Step 5: Normalization", "Step 6: Syntax Validation", "Step 14: Output"],
+    "pending_steps": ["Step 7: DNS", "Step 8: Network", "Step 9: TLS", "Step 10: Protocol", "Step 11: Functional", "Step 12: Scoring", "Step 13: Deduplication"],
+    "hard_rules_followed": true
+  }
+}

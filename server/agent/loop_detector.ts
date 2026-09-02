@@ -2,7 +2,7 @@ import { AgentAction } from '../types';
 
 export interface LoopDetectionResult {
   isStuck: boolean;
-  type?: 'REPEATED_ACTION' | 'REPEATED_ERROR' | 'ITERATION_LIMIT' | 'NO_PROGRESS';
+  type?: 'REPEATED_ACTION' | 'REPEATED_ERROR' | 'ITERATION_LIMIT' | 'NO_PROGRESS' | 'TERMINAL_SUCCESS';
   message?: string;
   recommendedPivot?: string;
 }
@@ -21,8 +21,38 @@ export class LoopDetector {
       };
     }
 
-    if (actions.length < 3) {
+    if (actions.length < 2) {
       return { isStuck: false };
+    }
+
+    // 0. Check Terminal Success (Repeated successful validations or exports with valid results)
+    const recentSuccessfulValidations = actions.filter(
+      a => a.status === 'success' && (
+        a.tool === 'v2ray_validate_config' ||
+        a.tool === 'v2ray_test_config' ||
+        a.tool === 'validate_output' ||
+        a.tool === 'run_test' ||
+        a.tool === 'export_artifact' ||
+        a.type === 'verify'
+      )
+    );
+
+    if (recentSuccessfulValidations.length >= 2) {
+      const lastValidation = recentSuccessfulValidations[recentSuccessfulValidations.length - 1];
+      const prevValidation = recentSuccessfulValidations[recentSuccessfulValidations.length - 2];
+      
+      // If the last two validations or export actions were successful and no new errors occurred
+      const recentErrors = actions.filter(a => a.status === 'failed');
+      if (recentErrors.length === 0 || actions[actions.length - 1].status === 'success') {
+        if (lastValidation.tool === prevValidation.tool || lastValidation.tool === 'export_artifact' || prevValidation.tool === 'export_artifact') {
+          return {
+            isStuck: true,
+            type: 'TERMINAL_SUCCESS',
+            message: 'Objective is already verified and successful. Halting loop to prevent redundant executions.',
+            recommendedPivot: 'Complete the task immediately with final evidence.',
+          };
+        }
+      }
     }
 
     // 1. Check Repeated Identical Errors
