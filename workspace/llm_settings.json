@@ -1,0 +1,9 @@
+{
+  "provider": "openai_compatible",
+  "baseURL": "https://apihub.agnes-ai.com/v1",
+  "apiKey": "sk-ckxTA8fXmfSycf7h4Fv4mwK79cEjCcLs6F5RXKmXwHlvQZ9W",
+  "model": "agnes-2.0-flash",
+  "maxTokens": 5632,
+  "temperature": 0,
+  "maxRetries": 5
+}

@@ -1,0 +1,182 @@
+{
+  "log": {
+    "loglevel": "warning",
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log"
+  },
+  "inbounds": [
+    {
+      "tag": "socks-in",
+      "port": 10808,
+      "listen": "127.0.0.1",
+      "protocol": "socks",
+      "settings": {
+        "auth": "noauth",
+        "udp": true,
+        "address": "127.0.0.1"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"],
+        "metadataOnly": false
+      }
+    },
+    {
+      "tag": "http-in",
+      "port": 10809,
+      "listen": "127.0.0.1",
+      "protocol": "http",
+      "settings": {},
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"],
+        "metadataOnly": false
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "YOUR_SERVER_IP",
+            "port": 443,
+            "users": [
+              {
+                "id": "87a7b52a-f516-4ad2-a698-0d5249a777c0",
+                "encryption": "none",
+                "flow": "xtls-rprx-vision",
+                "email": "client@iran-v2ray"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "serverNames": ["www.cloudflare.com"],
+          "publicKey": "YOUR_PUBLIC_KEY_HERE",
+          "shortId": "0123456789abcdef",
+          "spiderX": "/",
+          "fingerprint": "chrome",
+          "maxClientVer": 1.8.0,
+          "minClientVer": 1.8.0
+        },
+        "wsSettings": {
+          "path": "/v2ray?ed=2048",
+          "headers": {
+            "Host": "www.cloudflare.com"
+          }
+        }
+      },
+      "mux": {
+        "enabled": false,
+        "concurrency": 8
+      }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP",
+        "redirect": "",
+        "noises": []
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns",
+      "settings": {}
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "ip": ["geoip:private"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-ir"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "ip": ["geoip:ir"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:cn"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "protocol": ["bittorrent"],
+        "outboundTag": "block"
+      }
+    ]
+  },
+  "dns": {
+    "servers": [
+      {
+        "address": "1.1.1.1",
+        "port": 53,
+        "domains": ["geosite:category-gfw"],
+        "expectIPs": ["geoip:us"],
+        "skipFallback": true
+      },
+      {
+        "address": "8.8.8.8",
+        "port": 53,
+        "domains": ["geosite:category-gfw"],
+        "skipFallback": true
+      },
+      {
+        "address": "localhost",
+        "port": 53,
+        "domains": ["geosite:cn", "geosite:category-ir"],
+        "skipFallback": true
+      },
+      {
+        "address": "1.1.1.1",
+        "port": 53
+      }
+    ],
+    "queryStrategy": "UseIPv4",
+    "tag": "dns-out"
+  },
+  "transport": {
+    "kernelTproxy": "off",
+    "concurrency": 8
+  },
+  "policy": {
+    "levels": {
+      "0": {
+        "statsUserDownlink": true,
+        "statsUserUplink": true
+      }
+    }
+  }
+}

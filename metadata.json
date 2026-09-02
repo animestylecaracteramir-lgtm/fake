@@ -1,0 +1,6 @@
+{
+  "name": "Autonomous Free Agent & V2Ray Config Builder",
+  "description": "Autonomous goal-oriented agent system featuring self-extending tools, real Python execution runtime, memory persistence, loop detection, and structured V2Ray/Xray configuration generator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

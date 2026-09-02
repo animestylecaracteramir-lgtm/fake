@@ -1,0 +1,12 @@
+{
+  "filename": "v2ray_vless_reality_gRPC_server.json",
+  "path": "outputs/v2ray_vless_reality_gRPC_server.json",
+  "type": "json",
+  "goal": "Build a strong VLESS + Reality + gRPC server configuration with maximum security and anti-detection features",
+  "created_at": "2026-09-02T08:07:20.375Z",
+  "validated": true,
+  "validation_result": "Validation score: 100/100, all checks passed. No errors or warnings.",
+  "source": "generated",
+  "version": "1.0.0",
+  "size_bytes": 1086
+}

@@ -1,0 +1,210 @@
+{
+  "log": {
+    "loglevel": "warning",
+    "access": "/var/log/xray/access.log",
+    "error": "/var/log/xray/error.log"
+  },
+  "api": {
+    "tag": "api",
+    "services": ["HandlerService", "LoggerService", "StatsService"]
+  },
+  "stats": {},
+  "inbounds": [
+    {
+      "tag": "vless-reality-ws",
+      "port": 443,
+      "listen": "0.0.0.0",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "87a7b52a-f516-4ad2-a698-0d5249a777c0",
+            "flow": "xtls-rprx-vision",
+            "email": "server-admin@iran-v2ray"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "www.cloudflare.com:443",
+          "serverNames": [
+            "www.cloudflare.com",
+            "cloudflare.com"
+          ],
+          "privateKey": "aHxxxxSERVER_PRIVATE_KEY_REQUIREDxxxx",
+          "shortIds": [
+            "0123456789abcdef",
+            "fedcba9876543210"
+          ],
+          "maxClientVer": 1.8.0,
+          "minClientVer": 1.8.0,
+          "maxTimeDiff": 0,
+          "xver": 1
+        },
+        "wsSettings": {
+          "path": "/v2ray?ed=2048",
+          "headers": {
+            "Host": "www.cloudflare.com"
+          }
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls", "quic"],
+        "metadataOnly": false
+      },
+      "allocate": {
+        "strategy": "always",
+        "refresh": 5,
+        "concurrency": 3
+      }
+    },
+    {
+      "tag": "vless-reality-tcp",
+      "port": 8443,
+      "listen": "0.0.0.0",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "87a7b52a-f516-4ad2-a698-0d5249a777c0",
+            "flow": "xtls-rprx-vision",
+            "email": "tcp-backup@iran-v2ray"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "www.google.com:443",
+          "serverNames": ["www.google.com"],
+          "privateKey": "aHxxxxSERVER_PRIVATE_KEY_REQUIREDxxxx",
+          "shortIds": ["0123456789abcdef"],
+          "xver": 1
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"],
+        "metadataOnly": false
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP",
+        "redirect": "",
+        "noises": []
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns",
+      "settings": {}
+    }
+  ],
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "ip": ["geoip:private"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-ir"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "ip": ["geoip:ir"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:cn"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": ["224.0.0.0/4", "ff00::/8"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "protocol": ["bittorrent"],
+        "outboundTag": "block"
+      }
+    ]
+  },
+  "dns": {
+    "servers": [
+      {
+        "address": "1.1.1.1",
+        "port": 53,
+        "domains": ["geosite:category-gfw"],
+        "expectIPs": ["geoip:us"],
+        "skipFallback": true
+      },
+      {
+        "address": "8.8.8.8",
+        "port": 53,
+        "domains": ["geosite:category-gfw"],
+        "skipFallback": true
+      },
+      {
+        "address": "localhost",
+        "port": 53,
+        "domains": ["geosite:cn", "geosite:category-ir"],
+        "skipFallback": true
+      },
+      {
+        "address": "1.1.1.1",
+        "port": 53
+      }
+    ],
+    "queryStrategy": "UseIPv4",
+    "tag": "dns-out"
+  },
+  "transport": {
+    "kernelTproxy": "off",
+    "concurrency": 8
+  },
+  "policy": {
+    "levels": {
+      "0": {
+        "statsUserDownlink": true,
+        "statsUserUplink": true
+      }
+    },
+    "system": {
+      "statsInboundDownlink": true,
+      "statsInboundUplink": true
+    }
+  }
+}

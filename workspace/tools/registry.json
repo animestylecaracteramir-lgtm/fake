@@ -1,0 +1,33 @@
+{
+  "tools": [
+    {
+      "name": "test_adder_tool",
+      "description": "Adds two numbers together",
+      "version": "v22",
+      "category": "custom",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "number",
+            "description": "First number"
+          },
+          "b": {
+            "type": "number",
+            "description": "Second number"
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ]
+      },
+      "code": "\ndef add_numbers(a, b):\n    return a + b\n",
+      "dependencies": [],
+      "status": "error",
+      "is_custom": true,
+      "created_at": "2026-09-02T07:55:15.258Z",
+      "last_tested": "2026-09-02T07:55:15.258Z"
+    }
+  ]
+}

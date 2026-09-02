@@ -1,0 +1,13 @@
+{
+  "filename": "v2ray_vless_reality_gRPC_client.json",
+  "path": "outputs/v2ray_vless_reality_gRPC_client.json",
+  "type": "json",
+  "goal": "Build a strong VLESS + Reality + gRPC client configuration with maximum security and anti-detection features",
+  "created_at": "2026-09-02T08:07:20.381Z",
+  "validated": true,
+  "validation_result": "Validation score: 100/100, all checks passed. No errors or warnings.",
+  "source": "generated",
+  "version": "1.0.0",
+  "size_bytes": 1094,
+  "share_link": "vless://fdbe68f5-0c51-46e8-873e-d95192a79b50@127.0.0.1:443?type=grpc&security=reality&sni=www.cloudflare.com&serviceName=realgrpc&mode=multi#VLESS-Reality-gRPC-Strong"
+}
