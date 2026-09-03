@@ -22,7 +22,8 @@ export type ToolErrorType =
   | 'TOOL_QUARANTINED'
   | 'TOOL_TEST_FAILED'
   | 'DUPLICATE_INVALID_TOOL_CALL'
-  | 'ARGUMENT_REPAIR_BLOCKED';
+  | 'ARGUMENT_REPAIR_BLOCKED'
+  | 'INVALID_TOOL_SCHEMA';
 
 export interface ToolQualityMetrics {
   successRate: number;
@@ -54,7 +55,11 @@ export interface ToolMetadata {
     type: 'object';
     properties: Record<string, ToolParameterSchema>;
     required: string[];
-  };
+  } | any;
+  internalSchema?: any;
+  normalizedSchema?: any;
+  providerSchema?: any;
+  schemaVersion?: string;
   returns?: Record<string, any>;
   created_at: string;
   last_tested?: string;
@@ -83,6 +88,10 @@ export interface ToolResult<T = any> {
     fingerprint?: string;
     reason?: string;
     required?: string;
+    retryable?: boolean;
+    attempts?: number;
+    url?: string;
+    finalUrl?: string;
   } | null;
   metadata?: {
     duration_ms?: number;
@@ -374,4 +383,105 @@ export interface ExperimentRecord {
     details?: string;
   };
   important_discoveries: string[];
+}
+
+// ==========================================
+// Network Fetch & Failure Classification Subsystem Types
+// ==========================================
+
+export type FetchErrorType =
+  | 'TIMEOUT'
+  | 'ABORTED'
+  | 'DNS_ERROR'
+  | 'CONNECTION_REFUSED'
+  | 'CONNECTION_RESET'
+  | 'TLS_ERROR'
+  | 'HTTP_400'
+  | 'HTTP_401'
+  | 'HTTP_403'
+  | 'HTTP_404'
+  | 'HTTP_408'
+  | 'HTTP_429'
+  | 'HTTP_5XX'
+  | 'INVALID_URL'
+  | 'UNSUPPORTED_PROTOCOL'
+  | 'NETWORK_UNAVAILABLE'
+  | 'UNKNOWN';
+
+export type UrlFetchStatus =
+  | 'PENDING'
+  | 'FETCHING'
+  | 'SUCCESS'
+  | 'FAILED_RETRYABLE'
+  | 'FAILED_FINAL'
+  | 'ABORTED';
+
+export interface SingleFetchResult {
+  ok: boolean;
+  url: string;
+  finalUrl?: string;
+  status?: number;
+  content?: string;
+  length?: number;
+  elapsedMs: number;
+  attempts: number;
+  headers?: Record<string, string>;
+  cached?: boolean;
+  errorType?: FetchErrorType;
+  message?: string;
+  retryable?: boolean;
+}
+
+export interface MultiFetchResult {
+  status: 'SUCCESS' | 'PARTIAL_SUCCESS' | 'FAILURE';
+  requested: number;
+  succeeded: number;
+  failed: number;
+  results: SingleFetchResult[];
+  successfulResults: SingleFetchResult[];
+  failedResults: SingleFetchResult[];
+  elapsedMs: number;
+}
+
+export interface FetchOptions {
+  timeoutMs?: number;
+  maxRetries?: number;
+  baseDelayMs?: number;
+  maxConcurrent?: number;
+  signal?: AbortSignal;
+  headers?: Record<string, string>;
+  bypassCache?: boolean;
+  maxContentLength?: number;
+  silent?: boolean;
+  fallbackToGitHubRaw?: boolean;
+}
+
+export interface UrlFailureRecord {
+  url: string;
+  host: string;
+  errorType: FetchErrorType;
+  attempts: number;
+  lastFailure: number;
+  message: string;
+}
+
+export interface HostHealthRecord {
+  host: string;
+  status: 'healthy' | 'degraded' | 'unreachable';
+  failureCount: number;
+  lastFailure: number;
+  lastSuccess: number;
+}
+
+export interface FetchExecutionRecord {
+  fetchExecutionId: string;
+  url: string;
+  host: string;
+  attempt: number;
+  maxAttempts: number;
+  errorType?: FetchErrorType;
+  statusCode?: number;
+  elapsedMs: number;
+  retryable?: boolean;
+  finalOutcome: 'success' | 'failed' | 'aborted' | 'cached';
 }

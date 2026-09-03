@@ -1,6 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import { LLMSettings } from '../types';
+import {
+  normalizeToolSchemaForProvider,
+  normalizeToolSchema,
+  toProviderSchema,
+  validateProviderCompatibility,
+  classifyProviderError,
+  saveOrPrintSchemaDebugSnapshot,
+  ClassifiedProviderError,
+} from '../tools/schema_normalizer';
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant' | 'tool';
@@ -54,13 +63,13 @@ export class LLMClient {
     const loadedDiskSettings = this.loadFromDisk();
 
     this.settings = {
-      provider: 'openai_compatible',
-      baseURL: loadedDiskSettings?.baseURL || settings?.baseURL || 'https://api.openai.com/v1',
-      apiKey: loadedDiskSettings?.apiKey || settings?.apiKey || process.env.OPENAI_API_KEY || '',
-      model: loadedDiskSettings?.model || settings?.model || 'gpt-4o',
-      maxTokens: loadedDiskSettings?.maxTokens || settings?.maxTokens || 4096,
-      temperature: loadedDiskSettings?.temperature ?? settings?.temperature ?? 0.2,
-      maxRetries: loadedDiskSettings?.maxRetries ?? settings?.maxRetries ?? 5,
+      provider: settings?.provider || loadedDiskSettings?.provider || 'openai_compatible',
+      baseURL: settings?.baseURL || loadedDiskSettings?.baseURL || 'https://api.openai.com/v1',
+      apiKey: settings?.apiKey || loadedDiskSettings?.apiKey || process.env.OPENAI_API_KEY || '',
+      model: settings?.model || loadedDiskSettings?.model || 'gpt-4o',
+      maxTokens: settings?.maxTokens || loadedDiskSettings?.maxTokens || 4096,
+      temperature: settings?.temperature ?? loadedDiskSettings?.temperature ?? 0.2,
+      maxRetries: settings?.maxRetries ?? loadedDiskSettings?.maxRetries ?? 5,
     };
   }
 
@@ -151,6 +160,23 @@ export class LLMClient {
         return { result, attemptsUsed: attempt };
       } catch (err: any) {
         lastError = err;
+
+        // CRITICAL: Classify provider error and stop retry loop immediately for deterministic / non-retryable errors
+        const status =
+          err.statusCode ||
+          err.status ||
+          (typeof err.message === 'string' && (err.message.includes('400') || err.message.includes('Bad Request')) ? 400 : 0);
+        const classified: ClassifiedProviderError =
+          err.classified || classifyProviderError(status, err?.message || String(err));
+
+        if (classified && classified.retryable === false) {
+          err.classified = classified;
+          if (!silent) {
+            console.error(`[API Non-Retryable Error] ${operationName} aborting retries on ${classified.errorClass}: ${err?.message || err}`);
+          }
+          throw err;
+        }
+
         const isLastAttempt = attempt >= maxAttempts;
         if (isLastAttempt) {
           if (!silent) {
@@ -262,8 +288,55 @@ export class LLMClient {
       temperature: this.settings.temperature,
     };
 
+    let validatedTools: any[] | undefined = undefined;
     if (tools && tools.length > 0) {
-      payload.tools = tools;
+      // 1. Authoritative schema normalization for provider
+      validatedTools = tools.map((tool: any, idx: number) => {
+        const rawParams = tool.function?.parameters || tool.parameters || {};
+        const normalizedParams = normalizeToolSchemaForProvider(rawParams, { isRoot: true, provider: 'openai-compatible' });
+        return {
+          type: 'function',
+          function: {
+            name: tool.function?.name || tool.name || `tool_${idx}`,
+            description: tool.function?.description || tool.description || '',
+            parameters: normalizedParams,
+          },
+        };
+      });
+
+      // 2. Fail-fast local validation BEFORE calling provider
+      for (let i = 0; i < validatedTools.length; i++) {
+        const t = validatedTools[i];
+        const check = validateProviderCompatibility(t.function.parameters, {
+          toolName: t.function.name,
+          provider: 'openai-compatible',
+        });
+        if (!check.valid) {
+          console.error(
+            `Invalid tool schema:\nindex=${i}\nname=${t.function.name}\npath=${check.path}\nvalue=${JSON.stringify(check.value)}\nprovider=openai-compatible`
+          );
+          saveOrPrintSchemaDebugSnapshot(validatedTools, i, check);
+          const validationError: any = new Error(
+            `Tool ${i} function '${t.function.name}' has invalid 'parameters' schema: ${check.message}`
+          );
+          validationError.statusCode = 400;
+          validationError.classified = {
+            errorClass: 'INVALID_TOOL_SCHEMA',
+            retryable: false,
+            message: validationError.message,
+            diagnostics: {
+              provider: 'openai-compatible',
+              toolIndex: i,
+              toolName: t.function.name,
+              schemaPath: check.path,
+              invalidValue: check.value,
+            },
+          };
+          throw validationError;
+        }
+      }
+
+      payload.tools = validatedTools;
       payload.tool_choice = 'auto';
     }
 
@@ -281,7 +354,17 @@ export class LLMClient {
 
       if (!resp.ok) {
         const errText = await resp.text();
-        throw new Error(`OpenAI API error [HTTP ${resp.status}]: ${errText}`);
+        const classified = classifyProviderError(resp.status, errText, validatedTools || tools);
+        if (classified.errorClass === 'INVALID_TOOL_SCHEMA') {
+          console.error(
+            `Invalid tool schema:\nindex=${classified.diagnostics?.toolIndex ?? 'unknown'}\nname=${classified.diagnostics?.toolName ?? 'unknown'}\npath=${classified.diagnostics?.schemaPath ?? 'unknown'}\nvalue=${classified.diagnostics?.invalidValue ?? 'unknown'}\nprovider=${classified.diagnostics?.provider || 'openai-compatible'}`
+          );
+          saveOrPrintSchemaDebugSnapshot(validatedTools || tools || [], classified.diagnostics?.toolIndex, classified);
+        }
+        const apiError: any = new Error(`OpenAI API error [HTTP ${resp.status}]: ${errText}`);
+        apiError.statusCode = resp.status;
+        apiError.classified = classified;
+        throw apiError;
       }
 
       const data = await resp.json();

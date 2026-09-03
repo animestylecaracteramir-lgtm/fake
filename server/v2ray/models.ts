@@ -1,6 +1,64 @@
 export type V2RayProtocol = 'vless' | 'vmess' | 'trojan' | 'shadowsocks' | 'dokodemo-door' | 'socks' | 'http';
 export type V2RayTransport = 'tcp' | 'ws' | 'grpc' | 'httpupgrade' | 'quic' | 'kcp';
 export type V2RaySecurity = 'none' | 'tls' | 'reality';
+export type VlessFlow = 'xtls-rprx-vision' | 'none' | '';
+
+export type V2RayDomainErrorCode =
+  | 'MISSING_REALITY_PRIVATE_KEY'
+  | 'INVALID_REALITY_PRIVATE_KEY'
+  | 'PLACEHOLDER_REALITY_KEY'
+  | 'MISSING_REALITY_PUBLIC_KEY'
+  | 'INVALID_REALITY_PUBLIC_KEY'
+  | 'MISSING_REALITY_SHORT_ID'
+  | 'INVALID_REALITY_SHORT_ID'
+  | 'MISSING_REMOTE_SERVER_ADDRESS'
+  | 'INVALID_REMOTE_SERVER_ADDRESS'
+  | 'CLIENT_SERVER_MISMATCH'
+  | 'INCOMPLETE_SHARE_LINK'
+  | 'SHARE_LINK_NOT_GENERATED'
+  | 'UNSUPPORTED_FLOW'
+  | 'REQUEST_INCOMPLETE'
+  | 'INVALID_PORT'
+  | 'INVALID_UUID'
+  | 'INVALID_DEST'
+  | 'INVALID_SNI';
+
+export interface VerificationState {
+  structural: 'pass' | 'fail';
+  semantic: 'pass' | 'fail';
+  cryptographic: 'verified' | 'valid_format' | 'placeholder' | 'malformed' | 'missing' | 'not_verified';
+  runtime: 'passed' | 'failed' | 'not_tested';
+  interoperability: 'verified' | 'mismatch' | 'not_verified' | 'not_tested';
+}
+
+export interface RealityServerDomainModel {
+  serverAddress?: string;
+  serverPort: number;
+  uuid: string;
+  flow?: VlessFlow | string;
+  transport: V2RayTransport;
+  security: 'reality';
+  serverNames: string[];
+  privateKey: string;
+  shortIds: string[];
+  dest: string;
+}
+
+export interface RealityClientDomainModel {
+  serverAddress: string;
+  serverPort: number;
+  localSocksPort?: number;
+  localHttpPort?: number;
+  uuid: string;
+  flow?: VlessFlow | string;
+  transport: V2RayTransport;
+  security: 'reality';
+  serverName: string;
+  publicKey: string;
+  shortId: string;
+  fingerprint: string;
+  spiderX?: string;
+}
 
 export interface V2RayUser {
   id?: string; // UUID for vless/vmess
@@ -29,10 +87,14 @@ export interface V2RayStreamSettings {
   realitySettings?: {
     show?: boolean;
     dest?: string;
+    target?: string;
     serverNames?: string[];
+    serverName?: string;
     privateKey?: string;
     publicKey?: string;
+    password?: string;
     shortIds?: string[];
+    shortId?: string;
     spiderX?: string;
     fingerprint?: string;
   };
@@ -134,7 +196,12 @@ export interface V2RayBuilderParams {
   role: 'server' | 'client';
   protocol: V2RayProtocol;
   serverAddress?: string;
-  port: number;
+  port?: number;
+  serverPort?: number;
+  localSocksPort?: number;
+  localHttpPort?: number;
+  allowLocalServer?: boolean;
+  autoGenerateKeys?: boolean;
   listenAddress?: string;
   uuid?: string;
   password?: string;
@@ -149,6 +216,7 @@ export interface V2RayBuilderParams {
   realityPublicKey?: string;
   realityPrivateKey?: string;
   realityShortIds?: string[];
+  realityShortId?: string;
   realityDest?: string;
   shadowsocksMethod?: string;
   enableSniffing?: boolean;

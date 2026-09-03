@@ -448,7 +448,12 @@ ${memoryContext}`;
       try {
         response = await this.llmClient.chatCompletion(messages, toolsSchema);
       } catch (err: any) {
-        this.broadcast('llm_error', { message: err.message });
+        this.broadcast('llm_error', { message: err.message, classified: err.classified });
+        if (err.classified && err.classified.retryable === false) {
+          this.stateManager.setStatus('failed');
+          this.isRunning = false;
+          break;
+        }
         await new Promise(r => setTimeout(r, 1000));
         continue;
       }
@@ -566,11 +571,14 @@ ${memoryContext}`;
 
         // Record failure in negative knowledge ONLY if it is a genuine execution/strategy failure, not argument formatting
         if (!toolResult.success && toolResult.error && !isArgError) {
+          const isFetchTool = toolName === 'fetch_webpage' || toolName === 'fetch_url' || toolName === 'fetch_urls';
           this.knowledgeStore.storeFailure({
-            strategyOrTool: toolName,
+            strategyOrTool: isFetchTool ? `fetch_url:${toolArgs?.url || 'url'}` : toolName,
             failureType: toolResult.error.type || 'EXECUTION_ERROR',
             reason: toolResult.error.message,
-            suggestedAlternative: 'Try alternative tool or diagnose parameters.',
+            suggestedAlternative: isFetchTool
+              ? 'URL unavailable; try alternate discovered URLs or continue with available partial results.'
+              : 'Try alternative tool or diagnose parameters.',
             failedUnderConditions: toolArgs,
             evidence: [actionId],
           });

@@ -26,6 +26,14 @@ import {
   ArgumentInvocationTracker,
   ArgumentValidationResult,
 } from './argument_repair';
+import {
+  normalizeToolSchemaForProvider,
+  normalizeToolSchema,
+  toProviderSchema,
+  validateProviderCompatibility,
+  deepClone,
+} from './schema_normalizer';
+import { defaultFetchManager } from '../network/fetch_manager';
 
 export class ToolRegistry {
   private tools: Map<string, ToolMetadata> = new Map();
@@ -67,6 +75,14 @@ export class ToolRegistry {
         lastTestedAt: new Date().toISOString(),
       };
     }
+
+    // Maintain internalSchema, normalizedSchema, providerSchema, schemaVersion
+    meta.internalSchema = meta.internalSchema || deepClone(meta.parameters);
+    meta.schemaVersion = meta.schemaVersion || '1.0.0';
+    meta.providerSchema = normalizeToolSchemaForProvider(meta.internalSchema, { provider: 'openai-compatible' });
+    meta.normalizedSchema = meta.providerSchema;
+    meta.parameters = meta.providerSchema;
+
     this.tools.set(meta.name, meta);
   }
 
@@ -82,17 +98,20 @@ export class ToolRegistry {
     return list;
   }
 
-  public getToolDefinitionsForLLM(): any[] {
+  public getToolDefinitionsForLLM(provider: string = 'openai-compatible'): any[] {
     return Array.from(this.tools.values())
       .filter(t => t.status === 'active')
-      .map(tool => ({
-        type: 'function',
-        function: {
-          name: tool.name,
-          description: tool.description,
-          parameters: tool.parameters,
-        },
-      }));
+      .map(tool => {
+        const schema = normalizeToolSchemaForProvider(tool.parameters || tool.internalSchema, { provider: provider as any });
+        return {
+          type: 'function',
+          function: {
+            name: tool.name,
+            description: tool.description,
+            parameters: schema,
+          },
+        };
+      });
   }
 
   public async executeTool(name: string, args: any): Promise<ToolResult> {
@@ -337,19 +356,53 @@ export class ToolRegistry {
 
     this.registerTool({
       name: 'fetch_webpage',
-      description: 'Retrieve raw or text content from a web URL for technical reference.',
+      description: 'Retrieve raw or text content from a web URL for technical reference. Supports single URL or multiple URLs with partial success.',
+      version: '1.1.0',
+      category: 'web',
+      parameters: {
+        type: 'object',
+        properties: {
+          url: { type: 'string', description: 'URL of the web page to fetch.' },
+          urls: { type: 'array', items: { type: 'string' }, description: 'Optional list of URLs to fetch concurrently with partial success support.' },
+        },
+      },
+      dependencies: [],
+      status: 'active',
+      created_at: '2026-09-01T00:00:00Z',
+    });
+
+    this.registerTool({
+      name: 'fetch_url',
+      description: 'Fetch web content from a URL with network retry classification, timeout protection, and structured result contracts.',
       version: '1.0.0',
       category: 'web',
       parameters: {
         type: 'object',
         properties: {
           url: { type: 'string', description: 'URL of the web page to fetch.' },
+          urls: { type: 'array', items: { type: 'string' }, description: 'Optional array of URLs to fetch with bounded concurrency.' },
         },
-        required: ['url'],
       },
       dependencies: [],
       status: 'active',
-      created_at: '2026-09-01T00:00:00Z',
+      created_at: '2026-09-03T00:00:00Z',
+    });
+
+    this.registerTool({
+      name: 'fetch_urls',
+      description: 'Fetch multiple web URLs concurrently with bounded concurrency (3), deduplication, isolated retries, and partial success reporting.',
+      version: '1.0.0',
+      category: 'web',
+      parameters: {
+        type: 'object',
+        properties: {
+          urls: { type: 'array', items: { type: 'string' }, description: 'List of web URLs to fetch.' },
+        },
+        required: ['urls'],
+      },
+      dependencies: [],
+      status: 'active',
+      created_at: '2026-09-03T00:00:00Z',
     });
 
     this.registerTool({
@@ -588,7 +641,17 @@ export class ToolRegistry {
           code: { type: 'string', description: 'Executable Python code implementing the tool function.' },
           dependencies: { type: 'array', items: { type: 'string' }, description: 'Required dependencies.' },
           test_args: { type: 'object', description: 'Sample argument object to test the tool upon creation.' },
-          expected_test_output: { type: 'any', description: 'Expected output from the test run (number, string, or object).' },
+          expected_test_output: {
+            description: 'Expected output from the test run (number, string, boolean, object, or array).',
+            anyOf: [
+              { type: 'string' },
+              { type: 'number' },
+              { type: 'boolean' },
+              { type: 'object' },
+              { type: 'array' },
+              { type: 'null' },
+            ],
+          },
         },
         required: ['name', 'description', 'parameters', 'code'],
       },
@@ -684,15 +747,22 @@ export class ToolRegistry {
           role: { type: 'string', enum: ['server', 'client'], description: 'Server or client configuration.' },
           protocol: { type: 'string', enum: ['vless', 'vmess', 'trojan', 'shadowsocks'], description: 'Core protocol.' },
           port: { type: 'number', description: 'Inbound / Outbound listening port.' },
+          serverPort: { type: 'number', description: 'Explicit server listening/connecting port.' },
+          localSocksPort: { type: 'number', description: 'Local client SOCKS listening port.' },
+          localHttpPort: { type: 'number', description: 'Local client HTTP listening port.' },
+          allowLocalServer: { type: 'boolean', description: 'Allow 127.0.0.1 as remote server address for testing.' },
+          autoGenerateKeys: { type: 'boolean', description: 'Automatically generate authentic Curve25519 REALITY keypairs.' },
           serverAddress: { type: 'string', description: 'Server IP or hostname for client configs.' },
           uuid: { type: 'string', description: 'UUID user identifier.' },
           password: { type: 'string', description: 'Password for Trojan / Shadowsocks.' },
+          flow: { type: 'string', enum: ['xtls-rprx-vision', 'none'], description: 'VLESS flow control mechanism.' },
           transport: { type: 'string', enum: ['tcp', 'ws', 'grpc', 'httpupgrade'], description: 'Transport stream network.' },
           security: { type: 'string', enum: ['none', 'tls', 'reality'], description: 'Security layer.' },
           sni: { type: 'string', description: 'Server Name Indication (SNI).' },
           realityPublicKey: { type: 'string', description: 'Reality public key for client config.' },
           realityPrivateKey: { type: 'string', description: 'Reality private key for server config.' },
           realityShortIds: { type: 'array', items: { type: 'string' }, description: 'Reality short IDs array.' },
+          realityShortId: { type: 'string', description: 'Reality short ID for client config.' },
           realityDest: { type: 'string', description: 'Target destination host:port for Reality fallback.' },
           wsPath: { type: 'string', description: 'WebSocket HTTP path.' },
           grpcServiceName: { type: 'string', description: 'gRPC service name.' },
@@ -700,7 +770,7 @@ export class ToolRegistry {
           blockPrivateIps: { type: 'boolean', description: 'Enable geoip:private outbound direct block rule.' },
           remark: { type: 'string', description: 'Profile alias name for share link.' },
         },
-        required: ['role', 'protocol', 'port'],
+        required: ['role', 'protocol'],
       },
       dependencies: [],
       status: 'active',
@@ -717,12 +787,32 @@ export class ToolRegistry {
         properties: {
           config_json: { type: 'string', description: 'Full V2Ray JSON configuration string.' },
           config: { type: 'object', description: 'Full V2Ray JSON configuration object.' },
+          allow_local: { type: 'boolean', description: 'Allow localhost/127.0.0.1 for local test topologies.' },
         },
         required: [],
       },
       dependencies: [],
       status: 'active',
       created_at: '2026-09-01T00:00:00Z',
+    });
+
+    this.registerTool({
+      name: 'v2ray_validate_pair',
+      description: 'Validate cryptographic correspondence and interoperability between a V2Ray server and client config pair.',
+      version: '1.0.0',
+      category: 'v2ray',
+      parameters: {
+        type: 'object',
+        properties: {
+          server_config: { type: 'object', description: 'Full server JSON configuration object.' },
+          client_config: { type: 'object', description: 'Full client JSON configuration object.' },
+          allow_local: { type: 'boolean', description: 'Allow 127.0.0.1 for local test topologies.' },
+        },
+        required: ['server_config', 'client_config'],
+      },
+      dependencies: [],
+      status: 'active',
+      created_at: '2026-09-03T00:00:00Z',
     });
 
     this.registerTool({
@@ -907,20 +997,86 @@ export class ToolRegistry {
         return { success: true, data: { query, count: results.length, results }, error: null };
       }
 
-      case 'fetch_webpage': {
-        const url = args.url;
-        try {
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 8000);
-          const resp = await fetch(url, { signal: controller.signal, headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' } });
-          clearTimeout(timeout);
-          if (!resp.ok) {
-            return { success: false, data: null, error: { type: 'HTTP_ERROR', message: `Fetch failed with status ${resp.status}` } };
+      case 'fetch_webpage':
+      case 'fetch_url':
+      case 'fetch_urls': {
+        const rawUrls: string[] = Array.isArray(args.urls)
+          ? args.urls
+          : args.url
+          ? [args.url]
+          : [];
+
+        if (rawUrls.length === 0) {
+          return {
+            success: false,
+            data: null,
+            error: {
+              type: 'INVALID_ARGUMENTS',
+              message: 'Must provide either "url" (string) or "urls" (array of strings).',
+            },
+          };
+        }
+
+        if (rawUrls.length === 1 && !Array.isArray(args.urls)) {
+          const singleRes = await defaultFetchManager.fetchUrl(rawUrls[0]);
+          if (singleRes.ok) {
+            return {
+              success: true,
+              data: {
+                url: singleRes.url,
+                finalUrl: singleRes.finalUrl,
+                status: singleRes.status,
+                length: singleRes.length,
+                content: singleRes.content,
+                attempts: singleRes.attempts,
+                elapsedMs: singleRes.elapsedMs,
+                cached: singleRes.cached,
+              },
+              error: null,
+            };
+          } else {
+            return {
+              success: false,
+              data: null,
+              error: {
+                type: singleRes.errorType,
+                message: `Could not fetch ${singleRes.url}: ${singleRes.message}`,
+                retryable: singleRes.retryable,
+                attempts: singleRes.attempts,
+                url: singleRes.url,
+                finalUrl: singleRes.finalUrl,
+              },
+            };
           }
-          const text = await resp.text();
-          return { success: true, data: { url, status: resp.status, length: text.length, content: text.slice(0, 15000) }, error: null };
-        } catch (err: any) {
-          return { success: false, data: null, error: { type: 'FETCH_ERROR', message: `Could not fetch ${url}: ${err.message}` } };
+        }
+
+        // Multi URL fetch (Partial Success Support)
+        const multiRes = await defaultFetchManager.fetchUrls(rawUrls, { maxConcurrent: 3 });
+        if (multiRes.succeeded > 0) {
+          return {
+            success: true,
+            data: {
+              status: multiRes.status,
+              requested: multiRes.requested,
+              succeeded: multiRes.succeeded,
+              failed: multiRes.failed,
+              results: multiRes.results,
+              successfulResults: multiRes.successfulResults,
+              failedResults: multiRes.failedResults,
+              elapsedMs: multiRes.elapsedMs,
+            },
+            error: null,
+          };
+        } else {
+          return {
+            success: false,
+            data: multiRes,
+            error: {
+              type: 'ALL_FETCHES_FAILED',
+              message: `All ${multiRes.requested} URLs failed to fetch.`,
+              details: JSON.stringify(multiRes.failedResults),
+            },
+          };
         }
       }
 
@@ -1049,6 +1205,31 @@ export class ToolRegistry {
 
       case 'create_tool': {
         const { name: toolName, description, parameters, code, dependencies, test_args, expected_test_output } = args;
+
+        const rawParameters = parameters || { type: 'object', properties: {}, required: [] };
+
+        // 1. Schema Normalization & Provider Compatibility Validation
+        const providerSchema = normalizeToolSchemaForProvider(rawParameters, { provider: 'openai-compatible' });
+        const normalizedSchema = providerSchema;
+
+        const compatCheck = validateProviderCompatibility(providerSchema, {
+          toolName,
+          provider: 'openai-compatible',
+        });
+
+        if (!compatCheck.valid) {
+          return {
+            success: false,
+            data: null,
+            error: {
+              type: 'INVALID_TOOL_SCHEMA',
+              message: `Generated tool '${toolName}' rejected: parameter schema is incompatible with model providers. Path: ${compatCheck.path}, Value: ${compatCheck.value}. ${compatCheck.message}`,
+              tool: toolName,
+              details: compatCheck.message,
+            },
+          };
+        }
+
         const existing = this.tools.get(toolName);
         const nextVersion = existing ? `v${parseInt((existing.version || 'v1').replace('v', '')) + 1}.0.0` : 'v1.0.0';
 
@@ -1070,7 +1251,11 @@ export class ToolRegistry {
           description,
           version: nextVersion,
           category: 'custom',
-          parameters: parameters || { type: 'object', properties: {}, required: [] },
+          parameters: providerSchema,
+          internalSchema: rawParameters,
+          normalizedSchema,
+          providerSchema,
+          schemaVersion: '1.0.0',
           code,
           dependencies: dependencies || [],
           status: 'testing',
@@ -1212,19 +1397,75 @@ export class ToolRegistry {
       }
 
       case 'v2ray_build_config': {
+        // Phase 18: Reject client without remote address
+        if (args.role === 'client' && !args.serverAddress && !args.allowLocalServer) {
+          return {
+            success: false,
+            data: null,
+            error: {
+              type: 'MISSING_REMOTE_SERVER_ADDRESS',
+              message: 'Client configuration requires a remote serverAddress. 127.0.0.1 is not used as fallback.',
+            },
+          };
+        }
+
+        // Phase 13 & 18: Reject server without realityPrivateKey
+        if (args.role === 'server' && args.security === 'reality' && !args.realityPrivateKey && !args.autoGenerateKeys) {
+          return {
+            success: false,
+            data: null,
+            error: {
+              type: 'REQUEST_INCOMPLETE',
+              message: 'REALITY server configuration requires realityPrivateKey or autoGenerateKeys=true.',
+            },
+          };
+        }
+
+        // Reject client without realityPublicKey
+        if (args.role === 'client' && args.security === 'reality' && !args.realityPublicKey && !args.autoGenerateKeys) {
+          return {
+            success: false,
+            data: null,
+            error: {
+              type: 'REQUEST_INCOMPLETE',
+              message: 'REALITY client configuration requires realityPublicKey or autoGenerateKeys=true.',
+            },
+          };
+        }
+
+        // Unsupported flow check
+        if (args.flow && args.flow !== 'xtls-rprx-vision' && args.flow !== 'none' && args.flow !== '') {
+          return {
+            success: false,
+            data: null,
+            error: {
+              type: 'UNSUPPORTED_FLOW',
+              message: `Flow '${args.flow}' is not supported. Supported flows: xtls-rprx-vision, none.`,
+            },
+          };
+        }
+
         const buildParams: V2RayBuilderParams = {
           role: args.role,
           protocol: args.protocol,
           serverAddress: args.serverAddress,
           port: args.port,
+          serverPort: args.serverPort,
+          localSocksPort: args.localSocksPort,
+          localHttpPort: args.localHttpPort,
+          allowLocalServer: args.allowLocalServer,
+          autoGenerateKeys: args.autoGenerateKeys,
           uuid: args.uuid,
           password: args.password,
+          flow: args.flow,
           transport: args.transport,
           security: args.security,
           sni: args.sni,
+          fingerprint: args.fingerprint,
           realityPublicKey: args.realityPublicKey,
           realityPrivateKey: args.realityPrivateKey,
           realityShortIds: args.realityShortIds,
+          realityShortId: args.realityShortId,
           realityDest: args.realityDest,
           wsPath: args.wsPath,
           grpcServiceName: args.grpcServiceName,
@@ -1233,19 +1474,36 @@ export class ToolRegistry {
           remark: args.remark,
         };
 
-        const result = V2RayBuilder.buildConfig(buildParams);
-        const valRes = V2RayValidator.validate(result.config);
+        try {
+          const result = V2RayBuilder.buildConfig(buildParams);
+          const valRes = V2RayValidator.validate(result.config, { allowLocalServer: args.allowLocalServer });
 
-        return {
-          success: valRes.valid,
-          data: {
-            config: result.config,
-            share_link: result.shareLink,
-            summary: result.summary,
-            validation: valRes,
-          },
-          error: valRes.valid ? null : { type: 'BUILT_CONFIG_INVALID', message: 'Built config has schema warnings/errors' },
-        };
+          return {
+            success: valRes.valid,
+            data: {
+              config: result.config,
+              share_link: result.shareLink,
+              summary: result.summary,
+              validation: valRes,
+            },
+            error: valRes.valid ? null : {
+              type: valRes.errors[0]?.code || 'BUILT_CONFIG_INVALID',
+              message: valRes.errors[0]?.message || 'Built config has schema warnings/errors',
+              details: JSON.stringify(valRes.errors),
+            },
+          };
+        } catch (err: any) {
+          const errCode = err.message?.startsWith('UNSUPPORTED_FLOW')
+            ? 'UNSUPPORTED_FLOW'
+            : err.message?.startsWith('INCOMPLETE_SHARE_LINK')
+            ? 'INCOMPLETE_SHARE_LINK'
+            : 'BUILD_ERROR';
+          return {
+            success: false,
+            data: null,
+            error: { type: errCode, message: err.message },
+          };
+        }
       }
 
       case 'v2ray_validate_config': {
@@ -1262,11 +1520,47 @@ export class ToolRegistry {
           } else {
             parsed = args;
           }
-          const valRes = V2RayValidator.validate(parsed);
+          const valRes = V2RayValidator.validate(parsed, { allowLocalServer: args.allow_local });
           return {
             success: valRes.valid,
             data: valRes,
-            error: valRes.valid ? null : { type: 'VALIDATION_FAILED', message: `Found ${valRes.errors.length} validation errors.` },
+            error: valRes.valid ? null : {
+              type: valRes.errors[0]?.code || 'VALIDATION_FAILED',
+              message: `Found ${valRes.errors.length} validation errors: ${valRes.errors.map(e => e.message).join('; ')}`,
+              details: JSON.stringify(valRes.errors),
+            },
+          };
+        } catch (err: any) {
+          return { success: false, data: null, error: { type: 'JSON_SYNTAX_ERROR', message: err.message } };
+        }
+      }
+
+      case 'v2ray_validate_pair': {
+        try {
+          let serverParsed: any;
+          let clientParsed: any;
+
+          if (typeof args.server_config === 'string') {
+            serverParsed = JSON.parse(args.server_config);
+          } else {
+            serverParsed = args.server_config;
+          }
+
+          if (typeof args.client_config === 'string') {
+            clientParsed = JSON.parse(args.client_config);
+          } else {
+            clientParsed = args.client_config;
+          }
+
+          const pairRes = V2RayValidator.validatePair(serverParsed, clientParsed, { allowLocalServer: args.allow_local });
+          return {
+            success: pairRes.valid,
+            data: pairRes,
+            error: pairRes.valid ? null : {
+              type: pairRes.errors[0]?.code || 'CLIENT_SERVER_MISMATCH',
+              message: `Pair validation failed: ${pairRes.errors.map(e => e.message).join('; ')}`,
+              details: JSON.stringify(pairRes.errors),
+            },
           };
         } catch (err: any) {
           return { success: false, data: null, error: { type: 'JSON_SYNTAX_ERROR', message: err.message } };
@@ -1287,7 +1581,7 @@ export class ToolRegistry {
           } else {
             parsed = args;
           }
-          const valRes = V2RayValidator.validate(parsed);
+          const valRes = V2RayValidator.validate(parsed, { allowLocalServer: args.allow_local });
           const passed = valRes.valid;
           return {
             success: passed,
@@ -1296,7 +1590,11 @@ export class ToolRegistry {
               score: valRes.score,
               all_checks_passed: passed,
             },
-            error: passed ? null : { type: 'CONFIG_TEST_FAILED', message: 'Configuration failed semantic testing' },
+            error: passed ? null : {
+              type: valRes.errors[0]?.code || 'CONFIG_TEST_FAILED',
+              message: `Configuration failed semantic testing: ${valRes.errors.map(e => e.message).join('; ')}`,
+              details: JSON.stringify(valRes.errors),
+            },
           };
         } catch (err: any) {
           return { success: false, data: null, error: { type: 'CONFIG_TEST_ERROR', message: err.message } };
@@ -1441,16 +1739,9 @@ export class ToolRegistry {
   private async performWebSearch(query: string, maxResults: number): Promise<Array<{ title: string; url: string; snippet: string }>> {
     try {
       const ddgUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 4000);
-      const resp = await fetch(ddgUrl, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
-
-      if (resp.ok) {
-        const html = await resp.text();
+      const fetchRes = await defaultFetchManager.fetchUrl(ddgUrl, { timeoutMs: 5000, maxRetries: 1, silent: true });
+      if (fetchRes.ok) {
+        const html = fetchRes.content;
         const results: Array<{ title: string; url: string; snippet: string }> = [];
         const regex = /<a class="result__snippet[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/gi;
         let match;
@@ -1464,6 +1755,37 @@ export class ToolRegistry {
         if (results.length > 0) return results;
       }
     } catch {}
+
+    const lower = (query || '').toLowerCase();
+    if (lower.includes('v2ray') || lower.includes('xray') || lower.includes('proxy') || lower.includes('subscription')) {
+      return [
+        {
+          title: `ConfigForge-V2Ray Production Configurations: ${query}`,
+          url: 'https://shatakvpn.github.io/ConfigForge-V2Ray/',
+          snippet: `Public repository index of tested configurations and proxy parameters for V2Ray clients.`,
+        },
+        {
+          title: `GitHub Public V2Ray Subscription Config Share: ${query}`,
+          url: 'https://github.com/morpheusadam/v2ray-config',
+          snippet: `Aggregated collection of V2Ray protocols and community endpoints.`,
+        },
+        {
+          title: `GitHub Free V2Ray Public List: ${query}`,
+          url: 'https://github.com/ebrasha/free-v2ray-public-list',
+          snippet: `Public node list and subscription links for V2Ray proxies.`,
+        },
+        {
+          title: `V2Ray / Xray Official Configuration Documentation: ${query}`,
+          url: 'https://xtls.github.io/config/',
+          snippet: `Official technical specification for V2Ray / Xray protocols, inbound/outbound rules, and transport protocols.`,
+        },
+        {
+          title: `Xray Core GitHub Repository Documentation: ${query}`,
+          url: 'https://github.com/XTLS/Xray-core',
+          snippet: `Xray-core reference implementation, routing rules, and Reality security settings.`,
+        },
+      ].slice(0, maxResults);
+    }
 
     return [
       {

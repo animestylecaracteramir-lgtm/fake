@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-09-03T13:38:21.097Z",
+  "failedToolIndex": 14,
+  "error": {
+    "errorClass": "INVALID_TOOL_SCHEMA",
+    "retryable": false,
+    "statusCode": 400,
+    "message": "Tool 14 function has invalid 'parameters' schema: 'any' is not valid under any of the given schemas\nOn schema['properties']['expected_test_output']['type']:\n    'any'",
+    "diagnostics": {
+      "provider": "openai-compatible",
+      "toolIndex": 14,
+      "schemaPath": "properties",
+      "invalidValue": "any"
+    }
+  },
+  "tools": []
+}

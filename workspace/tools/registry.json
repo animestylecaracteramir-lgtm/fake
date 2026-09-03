@@ -32,7 +32,7 @@
     {
       "name": "convert_temperature",
       "description": "Converts temperature values between Celsius, Fahrenheit, and Kelvin with verified accuracy.",
-      "version": "v18.0.0",
+      "version": "v29.0.0",
       "category": "custom",
       "parameters": {
         "properties": {
@@ -66,21 +66,118 @@
         ],
         "type": "object"
       },
+      "internalSchema": {
+        "properties": {
+          "from_unit": {
+            "description": "Source unit.",
+            "enum": [
+              "celsius",
+              "fahrenheit",
+              "kelvin"
+            ],
+            "type": "string"
+          },
+          "to_unit": {
+            "description": "Target unit.",
+            "enum": [
+              "celsius",
+              "fahrenheit",
+              "kelvin"
+            ],
+            "type": "string"
+          },
+          "value": {
+            "description": "Numeric temperature value to convert.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value",
+          "from_unit",
+          "to_unit"
+        ],
+        "type": "object"
+      },
+      "normalizedSchema": {
+        "properties": {
+          "from_unit": {
+            "description": "Source unit.",
+            "enum": [
+              "celsius",
+              "fahrenheit",
+              "kelvin"
+            ],
+            "type": "string"
+          },
+          "to_unit": {
+            "description": "Target unit.",
+            "enum": [
+              "celsius",
+              "fahrenheit",
+              "kelvin"
+            ],
+            "type": "string"
+          },
+          "value": {
+            "description": "Numeric temperature value to convert.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value",
+          "from_unit",
+          "to_unit"
+        ],
+        "type": "object"
+      },
+      "providerSchema": {
+        "properties": {
+          "from_unit": {
+            "description": "Source unit.",
+            "enum": [
+              "celsius",
+              "fahrenheit",
+              "kelvin"
+            ],
+            "type": "string"
+          },
+          "to_unit": {
+            "description": "Target unit.",
+            "enum": [
+              "celsius",
+              "fahrenheit",
+              "kelvin"
+            ],
+            "type": "string"
+          },
+          "value": {
+            "description": "Numeric temperature value to convert.",
+            "type": "number"
+          }
+        },
+        "required": [
+          "value",
+          "from_unit",
+          "to_unit"
+        ],
+        "type": "object"
+      },
+      "schemaVersion": "1.0.0",
       "code": "import sys\nimport json\n\ndef run(args):\n    val = float(args.get(\"value\", 0))\n    from_unit = args.get(\"from_unit\", \"celsius\").lower()\n    to_unit = args.get(\"to_unit\", \"fahrenheit\").lower()\n    \n    # Convert to Celsius first\n    if from_unit in [\"c\", \"celsius\"]:\n        c = val\n    elif from_unit in [\"f\", \"fahrenheit\"]:\n        c = (val - 32) * 5 / 9\n    elif from_unit in [\"k\", \"kelvin\"]:\n        c = val - 273.15\n    else:\n        return {\"error\": f\"Unsupported unit: {from_unit}\"}\n        \n    # Convert from Celsius to target\n    if to_unit in [\"c\", \"celsius\"]:\n        res = c\n    elif to_unit in [\"f\", \"fahrenheit\"]:\n        res = (c * 9 / 5) + 32\n    elif to_unit in [\"k\", \"kelvin\"]:\n        res = c + 273.15\n    else:\n        return {\"error\": f\"Unsupported unit: {to_unit}\"}\n        \n    return {\"result\": round(res, 2), \"from_unit\": from_unit, \"to_unit\": to_unit, \"original_value\": val}\n\nif __name__ == \"__main__\":\n    raw = sys.argv[1] if len(sys.argv) > 1 else \"{}\"\n    try:\n        parsed = json.loads(raw)\n        out = run(parsed)\n        print(json.dumps(out))\n    except Exception as e:\n        print(json.dumps({\"error\": str(e)}))",
       "dependencies": [],
       "status": "active",
       "is_custom": true,
-      "created_at": "2026-09-02T18:14:17.221Z",
-      "last_tested": "2026-09-02T18:14:17.221Z",
+      "created_at": "2026-09-03T13:38:19.957Z",
+      "last_tested": "2026-09-03T13:38:19.957Z",
       "quality": {
         "successRate": 1,
         "usageCount": 1,
         "failureCount": 0,
         "evaluationScore": 1,
-        "avgLatencyMs": 35,
+        "avgLatencyMs": 37,
         "health": "healthy",
         "consecutiveFailures": 0,
-        "lastTestedAt": "2026-09-02T18:14:17.221Z"
+        "lastTestedAt": "2026-09-03T13:38:19.957Z"
       }
     },
     {
@@ -99,27 +196,61 @@
         ],
         "type": "object"
       },
+      "internalSchema": {
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "normalizedSchema": {
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "providerSchema": {
+        "properties": {
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "type": "object"
+      },
+      "schemaVersion": "1.0.0",
       "code": "import sys, json\nprint(json.dumps({\"hash\": \"v1_valid_hash\"}))",
       "dependencies": [],
       "status": "active",
       "is_custom": true,
-      "created_at": "2026-09-02T18:14:17.353Z",
-      "last_tested": "2026-09-02T18:14:17.353Z",
+      "created_at": "2026-09-03T13:38:20.109Z",
+      "last_tested": "2026-09-03T13:38:20.109Z",
       "quality": {
         "successRate": 1,
         "usageCount": 1,
         "failureCount": 0,
         "evaluationScore": 1,
-        "avgLatencyMs": 33,
+        "avgLatencyMs": 48,
         "health": "healthy",
         "consecutiveFailures": 0,
-        "lastTestedAt": "2026-09-02T18:14:17.353Z"
+        "lastTestedAt": "2026-09-03T13:38:20.109Z"
       }
     },
     {
       "name": "fast_doubler",
       "description": "Doubles numbers",
-      "version": "v17.0.0",
+      "version": "v28.0.0",
       "category": "custom",
       "parameters": {
         "properties": {
@@ -132,27 +263,61 @@
         ],
         "type": "object"
       },
+      "internalSchema": {
+        "properties": {
+          "n": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "n"
+        ],
+        "type": "object"
+      },
+      "normalizedSchema": {
+        "properties": {
+          "n": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "n"
+        ],
+        "type": "object"
+      },
+      "providerSchema": {
+        "properties": {
+          "n": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "n"
+        ],
+        "type": "object"
+      },
+      "schemaVersion": "1.0.0",
       "code": "import sys, json\nprint(json.dumps({\"result\": 20}))",
       "dependencies": [],
       "status": "active",
       "is_custom": true,
-      "created_at": "2026-09-02T18:14:17.620Z",
-      "last_tested": "2026-09-02T18:14:17.620Z",
+      "created_at": "2026-09-03T13:38:20.477Z",
+      "last_tested": "2026-09-03T13:38:20.477Z",
       "quality": {
         "successRate": 1,
         "usageCount": 1,
         "failureCount": 0,
         "evaluationScore": 1,
-        "avgLatencyMs": 36,
+        "avgLatencyMs": 32,
         "health": "healthy",
         "consecutiveFailures": 0,
-        "lastTestedAt": "2026-09-02T18:14:17.620Z"
+        "lastTestedAt": "2026-09-03T13:38:20.477Z"
       }
     },
     {
       "name": "failing_math_tool",
       "description": "Tool that throws exception during test",
-      "version": "v5.0.0",
+      "version": "v16.0.0",
       "category": "custom",
       "parameters": {
         "properties": {
@@ -165,21 +330,192 @@
         ],
         "type": "object"
       },
+      "internalSchema": {
+        "properties": {
+          "val": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "val"
+        ],
+        "type": "object"
+      },
+      "normalizedSchema": {
+        "properties": {
+          "val": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "val"
+        ],
+        "type": "object"
+      },
+      "providerSchema": {
+        "properties": {
+          "val": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "val"
+        ],
+        "type": "object"
+      },
+      "schemaVersion": "1.0.0",
       "code": "def tool(args):\n    raise ValueError(\"Intentional syntax or runtime test failure\")",
       "dependencies": [],
       "status": "error",
       "is_custom": true,
-      "created_at": "2026-09-02T18:14:18.117Z",
-      "last_tested": "2026-09-02T18:14:18.117Z",
+      "created_at": "2026-09-03T13:38:20.963Z",
+      "last_tested": "2026-09-03T13:38:20.963Z",
       "quality": {
         "successRate": 0,
         "usageCount": 1,
         "failureCount": 1,
         "evaluationScore": 0.67,
-        "avgLatencyMs": 23,
+        "avgLatencyMs": 31,
         "health": "failing",
         "consecutiveFailures": 1,
-        "lastTestedAt": "2026-09-02T18:14:18.117Z"
+        "lastTestedAt": "2026-09-03T13:38:20.963Z"
+      }
+    },
+    {
+      "name": "generated_telemetry_transformer",
+      "description": "Transforms telemetry data with flexible input output types",
+      "version": "v11.0.0",
+      "category": "custom",
+      "parameters": {
+        "properties": {
+          "payload": {
+            "description": "Raw payload of any JSON type",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object",
+                "properties": {},
+                "required": []
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "payload"
+        ],
+        "type": "object"
+      },
+      "internalSchema": {
+        "properties": {
+          "payload": {
+            "description": "Raw payload of any JSON type",
+            "type": "any"
+          }
+        },
+        "required": [
+          "payload"
+        ],
+        "type": "object"
+      },
+      "normalizedSchema": {
+        "properties": {
+          "payload": {
+            "description": "Raw payload of any JSON type",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object",
+                "properties": {},
+                "required": []
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "payload"
+        ],
+        "type": "object"
+      },
+      "providerSchema": {
+        "properties": {
+          "payload": {
+            "description": "Raw payload of any JSON type",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object",
+                "properties": {},
+                "required": []
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "payload"
+        ],
+        "type": "object"
+      },
+      "schemaVersion": "1.0.0",
+      "code": "import json, sys\n\ndef run(args):\n    return {\"processed\": True, \"raw\": args.get(\"payload\")}\n\nif __name__ == \"__main__\":\n    raw = sys.argv[1] if len(sys.argv) > 1 else \"{}\"\n    try:\n        parsed = json.loads(raw)\n        print(json.dumps(run(parsed)))\n    except Exception as e:\n        print(json.dumps({\"error\": str(e)}))",
+      "dependencies": [],
+      "status": "active",
+      "is_custom": true,
+      "created_at": "2026-09-03T13:38:20.997Z",
+      "last_tested": "2026-09-03T13:38:20.997Z",
+      "quality": {
+        "successRate": 1,
+        "usageCount": 1,
+        "failureCount": 0,
+        "evaluationScore": 1,
+        "avgLatencyMs": 33,
+        "health": "healthy",
+        "consecutiveFailures": 0,
+        "lastTestedAt": "2026-09-03T13:38:20.997Z"
       }
     }
   ]

@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "lastUpdated": "2026-09-02T18:14:18.114Z",
+  "lastUpdated": "2026-09-03T13:38:20.959Z",
   "experiences": [
     {
       "id": "exp_1788368262356_b454c7",
@@ -21,8 +21,8 @@
       ],
       "promotionLevel": "trusted",
       "confidence": 1,
-      "occurrences": 18,
-      "lastObservedAt": "2026-09-02T18:14:17.137Z",
+      "occurrences": 29,
+      "lastObservedAt": "2026-09-03T13:38:19.878Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T16:57:42.356Z",
@@ -195,12 +195,34 @@
         "act_1788372774283_call_create_1",
         "act_1788372774721_call_exec_1",
         "act_1788372857619_call_create_1",
-        "act_1788372858060_call_exec_1"
+        "act_1788372858060_call_exec_1",
+        "act_1788417678237_call_create_1",
+        "act_1788417678673_call_exec_1",
+        "act_1788417713238_call_create_1",
+        "act_1788417713677_call_exec_1",
+        "act_1788417779591_call_create_1",
+        "act_1788417780028_call_exec_1",
+        "act_1788419536802_call_create_1",
+        "act_1788419537239_call_exec_1",
+        "act_1788419574324_call_create_1",
+        "act_1788419574764_call_exec_1",
+        "act_1788421635826_call_create_1",
+        "act_1788421636262_call_exec_1",
+        "act_1788421696589_call_create_1",
+        "act_1788421697028_call_exec_1",
+        "act_1788421777594_call_create_1",
+        "act_1788421778034_call_exec_1",
+        "act_1788423750314_call_create_1",
+        "act_1788423750753_call_exec_1",
+        "act_1788442265357_call_create_1",
+        "act_1788442265839_call_exec_1",
+        "act_1788442700477_call_create_1",
+        "act_1788442700913_call_exec_1"
       ],
       "promotionLevel": "trusted",
       "confidence": 1,
-      "occurrences": 17,
-      "lastObservedAt": "2026-09-02T18:14:18.099Z",
+      "occurrences": 28,
+      "lastObservedAt": "2026-09-03T13:38:20.946Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T16:58:03.478Z",
@@ -1778,12 +1800,23 @@
         "act_1788372638499_call_v2ray_test_1",
         "act_1788372685659_call_v2ray_test_1",
         "act_1788372774264_call_v2ray_test_1",
-        "act_1788372857603_call_v2ray_test_1"
+        "act_1788372857603_call_v2ray_test_1",
+        "act_1788417678220_call_v2ray_test_1",
+        "act_1788417713221_call_v2ray_test_1",
+        "act_1788417779574_call_v2ray_test_1",
+        "act_1788419536784_call_v2ray_test_1",
+        "act_1788419574304_call_v2ray_test_1",
+        "act_1788421635806_call_v2ray_test_1",
+        "act_1788421696568_call_v2ray_test_1",
+        "act_1788421777575_call_v2ray_test_1",
+        "act_1788423750295_call_v2ray_test_1",
+        "act_1788442265317_call_v2ray_test_1",
+        "act_1788442700426_call_v2ray_test_1"
       ],
       "promotionLevel": "trusted",
       "confidence": 1,
-      "occurrences": 10,
-      "lastObservedAt": "2026-09-02T18:14:17.606Z",
+      "occurrences": 21,
+      "lastObservedAt": "2026-09-03T13:38:20.430Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T17:05:48.454Z",
@@ -1930,12 +1963,23 @@
         "act_1788372638506_call_val_1",
         "act_1788372685667_call_val_1",
         "act_1788372774271_call_val_1",
-        "act_1788372857609_call_val_1"
+        "act_1788372857609_call_val_1",
+        "act_1788417678226_call_val_1",
+        "act_1788417713227_call_val_1",
+        "act_1788417779580_call_val_1",
+        "act_1788419536791_call_val_1",
+        "act_1788419574311_call_val_1",
+        "act_1788421635813_call_val_1",
+        "act_1788421696575_call_val_1",
+        "act_1788421777582_call_val_1",
+        "act_1788423750302_call_val_1",
+        "act_1788442265328_call_val_1",
+        "act_1788442700455_call_val_1"
       ],
       "promotionLevel": "trusted",
       "confidence": 1,
-      "occurrences": 9,
-      "lastObservedAt": "2026-09-02T18:14:17.611Z",
+      "occurrences": 20,
+      "lastObservedAt": "2026-09-03T13:38:20.457Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T17:07:08.318Z",
@@ -1998,12 +2042,23 @@
         "act_1788372649512_tc_1",
         "act_1788372696641_tc_1",
         "act_1788372774767_tc_1",
-        "act_1788372858104_tc_1"
+        "act_1788372858104_tc_1",
+        "act_1788417678712_tc_1",
+        "act_1788417713713_tc_1",
+        "act_1788417780067_tc_1",
+        "act_1788419537282_tc_1",
+        "act_1788419574805_tc_1",
+        "act_1788421636301_tc_1",
+        "act_1788421697071_tc_1",
+        "act_1788421778072_tc_1",
+        "act_1788423750792_tc_1",
+        "act_1788442265880_tc_1",
+        "act_1788442700951_tc_1"
       ],
       "promotionLevel": "trusted",
       "confidence": 1,
-      "occurrences": 9,
-      "lastObservedAt": "2026-09-02T18:14:18.106Z",
+      "occurrences": 20,
+      "lastObservedAt": "2026-09-03T13:38:20.953Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T17:07:08.801Z",
@@ -2142,8 +2197,8 @@
       "evidence": [],
       "promotionLevel": "trusted",
       "confidence": 1,
-      "occurrences": 8,
-      "lastObservedAt": "2026-09-02T18:14:18.108Z",
+      "occurrences": 19,
+      "lastObservedAt": "2026-09-03T13:38:20.955Z",
       "provenance": {
         "createdBy": "agent_runtime",
         "timestamp": "2026-09-02T17:07:43.758Z",
@@ -2869,7 +2924,7 @@
         "exp_1788372685477_abc986"
       ],
       "promotionLevel": "observed",
-      "confidence": 0.24999999999999992,
+      "confidence": 0.2,
       "occurrences": 1,
       "lastObservedAt": "2026-08-18T18:11:25.478Z",
       "provenance": {
@@ -2983,7 +3038,7 @@
         "exp_1788372774084_ccdf68"
       ],
       "promotionLevel": "observed",
-      "confidence": 0.3999999999999999,
+      "confidence": 0.2,
       "occurrences": 1,
       "lastObservedAt": "2026-08-18T18:12:54.086Z",
       "provenance": {
@@ -3097,7 +3152,7 @@
         "exp_1788372857423_0a536c"
       ],
       "promotionLevel": "observed",
-      "confidence": 0.5499999999999999,
+      "confidence": 0.2,
       "occurrences": 1,
       "lastObservedAt": "2026-08-18T18:14:17.424Z",
       "provenance": {
@@ -3167,6 +3222,1332 @@
         "context": {}
       },
       "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788372857612"
+    },
+    {
+      "id": "exp_1788417678034_c2e4fc",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788417678034",
+      "goal": "Session_Persist_Check_1788417678034",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788417678034_c2e4fc"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T06:41:18.034Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:41:18.034Z",
+        "evidenceIds": [
+          "exp_1788417678034_c2e4fc"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788417678038_5e81ec",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788417678038_yry9",
+      "taskSignature": "stale_benchmark_1788417678038_yry9_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788417678038_5e81ec"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T06:41:18.039Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:41:18.038Z",
+        "evidenceIds": [
+          "exp_1788417678038_5e81ec"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788417678038_yry9."
+    },
+    {
+      "id": "exp_1788417678043_6e86fa",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788417678043_zc7i",
+      "taskSignature": "hierarchy_test_task_1788417678043_zc7i_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788417678043_6e86fa"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T06:41:18.049Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:41:18.043Z",
+        "evidenceIds": [
+          "exp_1788417678043_6e86fa"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788417678043_zc7i."
+    },
+    {
+      "id": "exp_1788417678233_192425",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788417678230",
+      "goal": "Memory_Sync_Terminal_1788417678230",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788417678231_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T06:41:18.233Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:41:18.233Z",
+        "evidenceIds": [
+          "act_1788417678231_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788417678230"
+    },
+    {
+      "id": "exp_1788417713035_9dfb43",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788417713035",
+      "goal": "Session_Persist_Check_1788417713035",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788417713035_9dfb43"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T06:41:53.035Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:41:53.035Z",
+        "evidenceIds": [
+          "exp_1788417713035_9dfb43"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788417713039_cea9df",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788417713039_xq6t",
+      "taskSignature": "stale_benchmark_1788417713039_xq6t_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788417713039_cea9df"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T06:41:53.041Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:41:53.039Z",
+        "evidenceIds": [
+          "exp_1788417713039_cea9df"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788417713039_xq6t."
+    },
+    {
+      "id": "exp_1788417713046_009da4",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788417713046_9h96",
+      "taskSignature": "hierarchy_test_task_1788417713046_9h96_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788417713046_009da4"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T06:41:53.052Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:41:53.046Z",
+        "evidenceIds": [
+          "exp_1788417713046_009da4"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788417713046_9h96."
+    },
+    {
+      "id": "exp_1788417713234_a59cef",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788417713230",
+      "goal": "Memory_Sync_Terminal_1788417713230",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788417713232_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T06:41:53.234Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:41:53.234Z",
+        "evidenceIds": [
+          "act_1788417713232_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788417713230"
+    },
+    {
+      "id": "exp_1788417779384_3e0248",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788417779384",
+      "goal": "Session_Persist_Check_1788417779384",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788417779384_3e0248"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T06:42:59.384Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:42:59.384Z",
+        "evidenceIds": [
+          "exp_1788417779384_3e0248"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788417779387_7051c0",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788417779387_xjh1",
+      "taskSignature": "stale_benchmark_1788417779387_xjh1_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788417779387_7051c0"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T06:42:59.389Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:42:59.387Z",
+        "evidenceIds": [
+          "exp_1788417779387_7051c0"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788417779387_xjh1."
+    },
+    {
+      "id": "exp_1788417779393_727d5d",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788417779393_1eha",
+      "taskSignature": "hierarchy_test_task_1788417779393_1eha_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788417779393_727d5d"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T06:42:59.399Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:42:59.393Z",
+        "evidenceIds": [
+          "exp_1788417779393_727d5d"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788417779393_1eha."
+    },
+    {
+      "id": "exp_1788417779587_95ae38",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788417779583",
+      "goal": "Memory_Sync_Terminal_1788417779583",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788417779585_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T06:42:59.587Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T06:42:59.587Z",
+        "evidenceIds": [
+          "act_1788417779585_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788417779583"
+    },
+    {
+      "id": "exp_1788419536749_b516f7",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788419536749",
+      "goal": "Session_Persist_Check_1788419536749",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788419536749_b516f7"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:12:16.749Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:12:16.749Z",
+        "evidenceIds": [
+          "exp_1788419536749_b516f7"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788419536753_17b181",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788419536753_ner3",
+      "taskSignature": "stale_benchmark_1788419536753_ner3_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788419536753_17b181"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T07:12:16.754Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:12:16.753Z",
+        "evidenceIds": [
+          "exp_1788419536753_17b181"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788419536753_ner3."
+    },
+    {
+      "id": "exp_1788419536758_a9de30",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788419536758_4d1k",
+      "taskSignature": "hierarchy_test_task_1788419536758_4d1k_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788419536758_a9de30"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T07:12:16.764Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:12:16.758Z",
+        "evidenceIds": [
+          "exp_1788419536758_a9de30"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788419536758_4d1k."
+    },
+    {
+      "id": "exp_1788419536798_a57032",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788419536794",
+      "goal": "Memory_Sync_Terminal_1788419536794",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788419536796_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:12:16.798Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:12:16.798Z",
+        "evidenceIds": [
+          "act_1788419536796_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788419536794"
+    },
+    {
+      "id": "exp_1788419574119_481551",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788419574119",
+      "goal": "Session_Persist_Check_1788419574119",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788419574119_481551"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:12:54.119Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:12:54.119Z",
+        "evidenceIds": [
+          "exp_1788419574119_481551"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788419574123_4130e1",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788419574123_uc7u",
+      "taskSignature": "stale_benchmark_1788419574123_uc7u_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788419574123_4130e1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T07:12:54.124Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:12:54.123Z",
+        "evidenceIds": [
+          "exp_1788419574123_4130e1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788419574123_uc7u."
+    },
+    {
+      "id": "exp_1788419574128_23cae3",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788419574128_y431",
+      "taskSignature": "hierarchy_test_task_1788419574128_y431_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788419574128_23cae3"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T07:12:54.134Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:12:54.128Z",
+        "evidenceIds": [
+          "exp_1788419574128_23cae3"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788419574128_y431."
+    },
+    {
+      "id": "exp_1788419574317_be1484",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788419574314",
+      "goal": "Memory_Sync_Terminal_1788419574314",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788419574316_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:12:54.317Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:12:54.317Z",
+        "evidenceIds": [
+          "act_1788419574316_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788419574314"
+    },
+    {
+      "id": "exp_1788421635622_e061af",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788421635622",
+      "goal": "Session_Persist_Check_1788421635622",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788421635622_e061af"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:47:15.622Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:47:15.622Z",
+        "evidenceIds": [
+          "exp_1788421635622_e061af"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788421635626_eed540",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788421635626_8n6x",
+      "taskSignature": "stale_benchmark_1788421635626_8n6x_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788421635626_eed540"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T07:47:15.627Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:47:15.626Z",
+        "evidenceIds": [
+          "exp_1788421635626_eed540"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788421635626_8n6x."
+    },
+    {
+      "id": "exp_1788421635631_d58144",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788421635631_ntjr",
+      "taskSignature": "hierarchy_test_task_1788421635631_ntjr_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788421635631_d58144"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T07:47:15.637Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:47:15.631Z",
+        "evidenceIds": [
+          "exp_1788421635631_d58144"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788421635631_ntjr."
+    },
+    {
+      "id": "exp_1788421635822_4d3ddc",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788421635818",
+      "goal": "Memory_Sync_Terminal_1788421635818",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788421635820_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:47:15.822Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:47:15.822Z",
+        "evidenceIds": [
+          "act_1788421635820_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788421635818"
+    },
+    {
+      "id": "exp_1788421696382_da86ac",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788421696382",
+      "goal": "Session_Persist_Check_1788421696382",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788421696382_da86ac"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:48:16.382Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:48:16.382Z",
+        "evidenceIds": [
+          "exp_1788421696382_da86ac"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788421696385_aa91e1",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788421696385_w51k",
+      "taskSignature": "stale_benchmark_1788421696385_w51k_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788421696385_aa91e1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T07:48:16.387Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:48:16.385Z",
+        "evidenceIds": [
+          "exp_1788421696385_aa91e1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788421696385_w51k."
+    },
+    {
+      "id": "exp_1788421696391_9f16a2",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788421696391_srv0",
+      "taskSignature": "hierarchy_test_task_1788421696391_srv0_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788421696391_9f16a2"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T07:48:16.396Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:48:16.391Z",
+        "evidenceIds": [
+          "exp_1788421696391_9f16a2"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788421696391_srv0."
+    },
+    {
+      "id": "exp_1788421696582_68d3df",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788421696578",
+      "goal": "Memory_Sync_Terminal_1788421696578",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788421696580_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:48:16.582Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:48:16.582Z",
+        "evidenceIds": [
+          "act_1788421696580_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788421696578"
+    },
+    {
+      "id": "exp_1788421777384_c8e542",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788421777384",
+      "goal": "Session_Persist_Check_1788421777384",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788421777384_c8e542"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:49:37.384Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:49:37.384Z",
+        "evidenceIds": [
+          "exp_1788421777384_c8e542"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788421777388_bcb0f0",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788421777388_j8z1",
+      "taskSignature": "stale_benchmark_1788421777388_j8z1_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788421777388_bcb0f0"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.2,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T07:49:37.389Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:49:37.388Z",
+        "evidenceIds": [
+          "exp_1788421777388_bcb0f0"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788421777388_j8z1."
+    },
+    {
+      "id": "exp_1788421777394_8ceee5",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788421777394_qwyz",
+      "taskSignature": "hierarchy_test_task_1788421777394_qwyz_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788421777394_8ceee5"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T07:49:37.400Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:49:37.394Z",
+        "evidenceIds": [
+          "exp_1788421777394_8ceee5"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788421777394_qwyz."
+    },
+    {
+      "id": "exp_1788421777589_d7ab85",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788421777585",
+      "goal": "Memory_Sync_Terminal_1788421777585",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788421777587_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T07:49:37.589Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T07:49:37.589Z",
+        "evidenceIds": [
+          "act_1788421777587_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788421777585"
+    },
+    {
+      "id": "exp_1788423750108_619483",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788423750108",
+      "goal": "Session_Persist_Check_1788423750108",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788423750108_619483"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T08:22:30.108Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T08:22:30.108Z",
+        "evidenceIds": [
+          "exp_1788423750108_619483"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788423750112_68fa1e",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788423750112_zkib",
+      "taskSignature": "stale_benchmark_1788423750112_zkib_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788423750112_68fa1e"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.24999999999999992,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T08:22:30.113Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T08:22:30.112Z",
+        "evidenceIds": [
+          "exp_1788423750112_68fa1e"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788423750112_zkib."
+    },
+    {
+      "id": "exp_1788423750118_6606d9",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788423750118_jww1",
+      "taskSignature": "hierarchy_test_task_1788423750118_jww1_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788423750118_6606d9"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T08:22:30.123Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T08:22:30.118Z",
+        "evidenceIds": [
+          "exp_1788423750118_6606d9"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788423750118_jww1."
+    },
+    {
+      "id": "exp_1788423750309_08a88a",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788423750305",
+      "goal": "Memory_Sync_Terminal_1788423750305",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788423750307_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T08:22:30.309Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T08:22:30.309Z",
+        "evidenceIds": [
+          "act_1788423750307_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788423750305"
+    },
+    {
+      "id": "exp_1788442265103_c1cb9d",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788442265103",
+      "goal": "Session_Persist_Check_1788442265103",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788442265103_c1cb9d"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T13:31:05.103Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:31:05.103Z",
+        "evidenceIds": [
+          "exp_1788442265103_c1cb9d"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788442265108_8db8ca",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788442265108_us8h",
+      "taskSignature": "stale_benchmark_1788442265108_us8h_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788442265108_8db8ca"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.3999999999999999,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T13:31:05.110Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:31:05.108Z",
+        "evidenceIds": [
+          "exp_1788442265108_8db8ca"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788442265108_us8h."
+    },
+    {
+      "id": "exp_1788442265118_7a2249",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788442265118_lvu4",
+      "taskSignature": "hierarchy_test_task_1788442265118_lvu4_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788442265118_7a2249"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T13:31:05.127Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:31:05.118Z",
+        "evidenceIds": [
+          "exp_1788442265118_7a2249"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788442265118_lvu4."
+    },
+    {
+      "id": "exp_1788442265344_a5f559",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788442265335",
+      "goal": "Memory_Sync_Terminal_1788442265335",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788442265339_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T13:31:05.344Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:31:05.344Z",
+        "evidenceIds": [
+          "act_1788442265339_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788442265335"
+    },
+    {
+      "id": "exp_1788442555049_79197d",
+      "category": "episodic",
+      "taskType": "math_conversion",
+      "taskSignature": "math_conversion_convert_50_celsius_to_fahrenheit",
+      "goal": "Convert 50 Celsius to Fahrenheit",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "convert_temperature",
+        "validate_output"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "act_1788442550389_call_267f245f6e1942f4a2bce1f8",
+        "act_1788442555044_call_6776bab6a1fa4954a64d42f9"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T13:35:55.049Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:35:55.049Z",
+        "evidenceIds": [
+          "act_1788442550389_call_267f245f6e1942f4a2bce1f8",
+          "act_1788442555044_call_6776bab6a1fa4954a64d42f9"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Convert 50 Celsius to Fahrenheit"
+    },
+    {
+      "id": "exp_1788442606060_8ce539",
+      "category": "episodic",
+      "taskType": "v2ray_config",
+      "taskSignature": "v2ray_config_generate_a_production_v2ray_vmess_over_w",
+      "goal": "Generate a production V2Ray VMess over WebSocket TLS configuration and validate it",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "v2ray_build_config",
+        "v2ray_build_config",
+        "v2ray_validate_config",
+        "v2ray_validate_config",
+        "v2ray_validate_config",
+        "v2ray_validate_config"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 100,
+      "evidence": [
+        "act_1788442571732_call_d4f0f1af587a4d63a69005dd",
+        "act_1788442571738_call_5f362899854a42c5be017a0b",
+        "act_1788442606055_call_ba433587227246499c3eaea7"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T13:36:46.060Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:36:46.060Z",
+        "evidenceIds": [
+          "act_1788442571732_call_d4f0f1af587a4d63a69005dd",
+          "act_1788442571738_call_5f362899854a42c5be017a0b",
+          "act_1788442606055_call_ba433587227246499c3eaea7"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Generate a production V2Ray VMess over WebSocket TLS configuration and validate it"
+    },
+    {
+      "id": "exp_1788442700192_651225",
+      "category": "episodic",
+      "taskType": "persistence_check",
+      "taskSignature": "persistence_check_session_persist_check_1788442700192",
+      "goal": "Session_Persist_Check_1788442700192",
+      "strategy": "Durable Disk JSON Sync",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 1,
+      "evidence": [
+        "exp_1788442700192_651225"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T13:38:20.192Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:38:20.192Z",
+        "evidenceIds": [
+          "exp_1788442700192_651225"
+        ],
+        "context": {}
+      },
+      "lesson": "Memory safely survived simulated runtime teardown."
+    },
+    {
+      "id": "exp_1788442700197_616f93",
+      "category": "episodic",
+      "taskType": "stale_benchmark_1788442700197_r2ku",
+      "taskSignature": "stale_benchmark_1788442700197_r2ku_old_legacy_protocol_setup",
+      "goal": "Old legacy protocol setup",
+      "strategy": "Legacy Approach",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.7,
+      "evidence": [
+        "exp_1788442700197_616f93"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.5499999999999999,
+      "occurrences": 1,
+      "lastObservedAt": "2026-08-19T13:38:20.199Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:38:20.197Z",
+        "evidenceIds": [
+          "exp_1788442700197_616f93"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Legacy Approach' for stale_benchmark_1788442700197_r2ku."
+    },
+    {
+      "id": "exp_1788442700206_f21e0e",
+      "category": "episodic",
+      "taskType": "hierarchy_test_task_1788442700206_pwe4",
+      "taskSignature": "hierarchy_test_task_1788442700206_pwe4_test_promotion_transitions",
+      "goal": "Test promotion transitions",
+      "strategy": "Adaptive Strategy",
+      "toolsUsed": [],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "exp_1788442700206_f21e0e"
+      ],
+      "promotionLevel": "trusted",
+      "confidence": 1,
+      "occurrences": 5,
+      "lastObservedAt": "2026-09-03T13:38:20.215Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:38:20.206Z",
+        "evidenceIds": [
+          "exp_1788442700206_f21e0e"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully applied 'Adaptive Strategy' for hierarchy_test_task_1788442700206_pwe4."
+    },
+    {
+      "id": "exp_1788442700467_9f669d",
+      "category": "episodic",
+      "taskType": "general_task",
+      "taskSignature": "general_task_memory_sync_terminal_1788442700460",
+      "goal": "Memory_Sync_Terminal_1788442700460",
+      "strategy": "Structured V2Ray Config Synthesis",
+      "toolsUsed": [
+        "export_artifact"
+      ],
+      "conditions": {},
+      "result": "success",
+      "evaluationScore": 0.95,
+      "evidence": [
+        "act_1788442700464_call_exp_1"
+      ],
+      "promotionLevel": "observed",
+      "confidence": 0.7,
+      "occurrences": 1,
+      "lastObservedAt": "2026-09-03T13:38:20.467Z",
+      "provenance": {
+        "createdBy": "agent_runtime",
+        "timestamp": "2026-09-03T13:38:20.467Z",
+        "evidenceIds": [
+          "act_1788442700464_call_exp_1"
+        ],
+        "context": {}
+      },
+      "lesson": "Successfully executed 'Structured V2Ray Config Synthesis' for: Memory_Sync_Terminal_1788442700460"
     }
   ],
   "negativeKnowledge": [
@@ -3179,10 +4560,10 @@
       "failureType": "SCRAPING_DEFECT",
       "reason": "Raw web scraping yielded malformed JSON syntax in Iranian network environment.",
       "suggestedAlternative": "Structured V2Ray Config Synthesis",
-      "observedCount": 18,
+      "observedCount": 29,
       "confidence": 1,
       "evidence": [],
-      "lastObservedAt": "2026-09-02T18:14:17.139Z"
+      "lastObservedAt": "2026-09-03T13:38:19.881Z"
     },
     {
       "id": "fail_1788368262824_44e022",
@@ -4427,12 +5808,29 @@
       "strategyOrTool": "test_persistent_tool",
       "failedUnderConditions": {},
       "failureType": "EXECUTION_ERROR",
-      "reason": "Persistent test error 1788372858114",
+      "reason": "Persistent test error 1788442700959",
       "suggestedAlternative": "Alternative path",
-      "observedCount": 5,
+      "observedCount": 16,
       "confidence": 1,
       "evidence": [],
-      "lastObservedAt": "2026-09-02T18:14:18.114Z"
+      "lastObservedAt": "2026-09-03T13:38:20.959Z"
+    },
+    {
+      "id": "fail_1788442606053_c774b6",
+      "strategyOrTool": "v2ray_validate_config",
+      "failedUnderConditions": {
+        "config_json": "{\"log\": {\"loglevel\": \"warning\"}, \"inbounds\": [{\"tag\": \"inbound-main\", \"port\": 443, \"listen\": \"0.0.0.0\", \"protocol\": \"vmess\", \"settings\": {\"clients\": [{\"id\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\", \"alterId\": 0, \"email\": \"VMess-WSS-TLS-Production@v2ray-engine\"}], \"streamSettings\": {\"network\": \"ws\", \"security\": \"tls\", \"tlsSettings\": {\"serverName\": \"www.example.com\", \"allowInsecure\": false, \"fingerprint\": \"chrome\", \"alpn\": [\"h2\", \"http/1.1\"], \"certificates\": [{\"certificateFile\": \"/etc/ssl/certs/fullchain.pem\", \"keyFile\": \"/etc/ssl/private/privkey.pem\"}]}, \"wsSettings\": {\"path\": \"/v2ray\", \"headers\": {\"Host\": \"www.example.com\"}}}, \"sniffing\": {\"enabled\": true, \"destOverride\": [\"http\", \"tls\", \"quic\"], \"metadataOnly\": false}}], \"outbounds\": [{\"tag\": \"direct\", \"protocol\": \"freedom\", \"settings\": {}}, {\"tag\": \"block\", \"protocol\": \"blackhole\", \"settings\": {\"response\": {\"type\": \"none\"}}}], \"routing\": {\"domainStrategy\": \"IPIfNonMatch\", \"rules\": []}, \"dns\": {\"servers\": [\"1.1.1.1\", \"8.8.8.8\", \"localhost\"], \"queryStrategy\": \"UseIPv4\"}}",
+        "allow_local": false
+      },
+      "failureType": "JSON_SYNTAX_ERROR",
+      "reason": "Expected ',' or '}' after property value in JSON at position 728 (line 1 column 729)",
+      "suggestedAlternative": "Try alternative tool or diagnose parameters.",
+      "observedCount": 1,
+      "confidence": 0.8,
+      "evidence": [
+        "act_1788442606050_call_727f6ca42ac44877a502a8f8"
+      ],
+      "lastObservedAt": "2026-09-03T13:36:46.053Z"
     }
   ],
   "strategies": [
